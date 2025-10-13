@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from .models import Simulation
+from .models import Simulation, SimulationTopicType, SimulationTopic
 
 
 def list_simulations(request):
@@ -39,3 +39,17 @@ def list_simulations(request):
         )
 
     return JsonResponse(data, safe=False)
+
+
+def list_simulation_topics(request):
+    topic_types = SimulationTopicType.objects.all().order_by("name")
+    data = {}
+    for topic_type in topic_types:
+        topics = (
+            SimulationTopic.objects.filter(type=topic_type)
+            .order_by("name")
+            .values_list("name", flat=True)
+        )
+        data[topic_type.name] = list(topics)
+
+    return JsonResponse(data)
