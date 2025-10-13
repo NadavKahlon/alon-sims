@@ -93,6 +93,8 @@ class Simulation(models.Model):
         on_delete=models.PROTECT,
         related_name="main_role_tag_simulations",
         verbose_name="תגית תפקיד מרכזית",
+        null=True,
+        blank=True,
     )
     type = models.CharField(
         max_length=20,
@@ -104,6 +106,8 @@ class Simulation(models.Model):
         on_delete=models.PROTECT,
         related_name="main_week_simulations",
         verbose_name="שבוע מרכזי",
+        null=True,
+        blank=True,
     )
     difficulty = models.CharField(
         max_length=10,
@@ -138,4 +142,12 @@ class Simulation(models.Model):
         ]
 
     def __str__(self):
-        return f"{self.main_sim_topic} - {self.main_role_tag}"
+        role = (
+            self.main_role_tag
+            if self.main_role_tag is not None
+            else "כללי"
+        )
+        return f'{self.main_sim_topic} - {role}'
+        if self.main_role_tag is not None:
+            result += f" - {self.main_role_tag}"
+        return result
