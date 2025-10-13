@@ -68,6 +68,7 @@ class SimulationTopic(models.Model):
 
 class WeekTopic(models.Model):
     """The topic of a week in officers' training."""
+
     topic = models.CharField("נושא", max_length=80, unique=True)
 
     class Meta:
@@ -81,6 +82,7 @@ class WeekTopic(models.Model):
 
 class Simulation(models.Model):
     """A simulation."""
+
     url = models.URLField(verbose_name="קישור")
     main_sim_topic = models.ForeignKey(
         SimulationTopic,
@@ -142,12 +144,8 @@ class Simulation(models.Model):
         ]
 
     def __str__(self):
-        role = (
-            self.main_role_tag
-            if self.main_role_tag is not None
-            else "כללי"
-        )
-        return f'{self.main_sim_topic} - {role}'
+        role = self.main_role_tag if self.main_role_tag is not None else "כללי"
+        return f"{self.main_sim_topic} - {role}"
         if self.main_role_tag is not None:
             result += f" - {self.main_role_tag}"
         return result

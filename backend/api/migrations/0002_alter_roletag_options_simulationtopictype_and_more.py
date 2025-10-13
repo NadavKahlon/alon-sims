@@ -7,46 +7,83 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0001_initial'),
+        ("api", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='roletag',
-            options={'verbose_name': 'תגית תפקיד', 'verbose_name_plural': 'תגיות תפקידים'},
-        ),
-        migrations.CreateModel(
-            name='SimulationTopicType',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=80, unique=True, verbose_name='סוג')),
-            ],
+            name="roletag",
             options={
-                'verbose_name': 'סוג נושא סימולציה',
-                'verbose_name_plural': 'סוגי נושאי סימולציות',
-                'indexes': [models.Index(fields=['name'], name='api_simulat_name_d88448_idx')],
+                "verbose_name": "תגית תפקיד",
+                "verbose_name_plural": "תגיות תפקידים",
             },
         ),
         migrations.CreateModel(
-            name='SimulationTopic',
+            name="SimulationTopicType",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=80, unique=True, verbose_name='נושא')),
-                ('type', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='topic_tags', to='api.simulationtopictype', verbose_name='סוג')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(max_length=80, unique=True, verbose_name="סוג"),
+                ),
             ],
             options={
-                'verbose_name': 'נושא סימולציה',
-                'verbose_name_plural': ' נושאי סימולציות',
+                "verbose_name": "סוג נושא סימולציה",
+                "verbose_name_plural": "סוגי נושאי סימולציות",
+                "indexes": [
+                    models.Index(fields=["name"], name="api_simulat_name_d88448_idx")
+                ],
+            },
+        ),
+        migrations.CreateModel(
+            name="SimulationTopic",
+            fields=[
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(max_length=80, unique=True, verbose_name="נושא"),
+                ),
+                (
+                    "type",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name="topic_tags",
+                        to="api.simulationtopictype",
+                        verbose_name="סוג",
+                    ),
+                ),
+            ],
+            options={
+                "verbose_name": "נושא סימולציה",
+                "verbose_name_plural": " נושאי סימולציות",
             },
         ),
         migrations.DeleteModel(
-            name='TopicTag',
+            name="TopicTag",
         ),
         migrations.DeleteModel(
-            name='TopicTagType',
+            name="TopicTagType",
         ),
         migrations.AddIndex(
-            model_name='simulationtopic',
-            index=models.Index(fields=['name'], name='api_simulat_name_3ac60b_idx'),
+            model_name="simulationtopic",
+            index=models.Index(fields=["name"], name="api_simulat_name_3ac60b_idx"),
         ),
     ]
