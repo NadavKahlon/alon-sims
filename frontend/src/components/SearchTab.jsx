@@ -4,6 +4,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import SimulationListEntry from './SimulationListEntry';
 import SimulationWindow from './SimulationWindow';
+import ErrorBox from './ErrorBox';
 
 function SearchTab() {
     const [serverData, setServerData] = useState(null);
@@ -61,7 +62,7 @@ function SearchTab() {
     }
 
     if (error) {
-        return error.toString();
+        return <ErrorBox error={error} />;
     }
 
     return (
