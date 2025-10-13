@@ -2,7 +2,7 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
-import { LocalFireDepartment, MenuBook, CheckCircle, Warning, Error } from '@mui/icons-material';
+import { LocalFireDepartment, MenuBook, CheckCircle, Warning, Error, Help, Person } from '@mui/icons-material';
 
 function SimulationListEntry({ simulation }) {
 
@@ -43,7 +43,7 @@ function SimulationListEntry({ simulation }) {
         mb: 2, 
         borderRadius: 2,
         display: 'flex',
-        alignItems: 'flex-start',
+        alignItems: 'center',
         gap: 2,
         '&:hover': {
           elevation: 4,
@@ -92,11 +92,37 @@ function SimulationListEntry({ simulation }) {
           {simulation.title || 'סימולציה ללא כותרת'}
         </Typography>
         
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-          {simulation.main_sim_topic || 'נושא ראשי'}
-          {simulation.main_sim_topic && ' | '}
-          {simulation.main_role_tag || 'כללי'}
-        </Typography>
+        <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 1 }}>
+          <Box sx={{ 
+            backgroundColor: 'grey.200', 
+            color: 'grey.700',
+            px: 1,
+            py: 0.5,
+            borderRadius: 1,
+            fontSize: '0.75rem',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 0.5
+          }}>
+            <Help sx={{ fontSize: 16 }} />
+            {simulation.main_sim_topic || 'נושא ראשי'}
+          </Box>
+          
+          <Box sx={{ 
+            backgroundColor: 'grey.200', 
+            color: 'grey.700',
+            px: 1,
+            py: 0.5,
+            borderRadius: 1,
+            fontSize: '0.75rem',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 0.5
+          }}>
+            <Person sx={{ fontSize: 16 }} />
+            {simulation.main_role_tag || 'כללי'}
+          </Box>
+        </Box>
       </Box>
     </Paper>
   );
