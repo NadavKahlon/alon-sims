@@ -1,4 +1,5 @@
 from django.http import JsonResponse
+import json
 from .models import Simulation, SimulationTopicType, SimulationTopic, RoleTag, WeekTopic
 
 
@@ -67,3 +68,19 @@ def list_week_topics(request):
         .values_list("topic", flat=True)
     )
     return JsonResponse(topics, safe=False)
+
+
+def list_all(request):
+    simulations_resp = list_simulations(request)
+    simulation_topics_resp = list_simulation_topics(request)
+    role_tags_resp = list_role_tags(request)
+    week_topics_resp = list_week_topics(request)
+
+    data = {
+        "simulations": json.loads(simulations_resp.content),
+        "simulation_topics": json.loads(simulation_topics_resp.content),
+        "role_tags": json.loads(role_tags_resp.content),
+        "week_topics": json.loads(week_topics_resp.content),
+    }
+
+    return JsonResponse(data)
