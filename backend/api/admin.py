@@ -1,3 +1,6 @@
 from django.contrib import admin
+from .models import RoleTag, SimulationTopic, SimulationTopicType
 
-# Register your models here.
+admin.site.register(RoleTag)
+admin.site.register(SimulationTopic)
+admin.site.register(SimulationTopicType)
