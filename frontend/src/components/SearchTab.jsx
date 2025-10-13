@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
+import Typography from '@mui/material/Typography';
+import SimulationListEntry from './SimulationListEntry';
 
 function SearchTab() {
     const [serverData, setServerData] = useState(null);
@@ -49,7 +51,24 @@ function SearchTab() {
         return error.toString();
     }
 
-    return "Fetch works";
+    return (
+        <Box sx={{ p: 3 }}>
+            {all_sims.length === 0 ? (
+                <Typography variant="body1" color="text.secondary">
+                    לא נמצאו סימולציות מתאימות.
+                </Typography>
+            ) : (
+                <Box>
+                    {all_sims.map((simulation, index) => (
+                        <SimulationListEntry 
+                            key={simulation.id || index} 
+                            simulation={simulation} 
+                        />
+                    ))}
+                </Box>
+            )}
+        </Box>
+    );
 }
 
 export default SearchTab;
