@@ -64,3 +64,16 @@ class SimulationTopic(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class WeekTopic(models.Model):
+    """The topic of a week in officers' training."""
+    topic = models.CharField("נושא", max_length=80, unique=True)
+
+    class Meta:
+        verbose_name = "נושא שבועי"
+        verbose_name_plural = "נושאים שבועיים"
+        indexes = [models.Index(fields=["topic"])]
+
+    def __str__(self):
+        return self.topic
