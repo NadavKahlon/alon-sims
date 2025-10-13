@@ -1,9 +1,9 @@
-import SearchEngine from './components/SearchEngine';
+import SearchTab from './components/SearchTab';
 
 function App() {
   return (
     <div className="App">
-      <SearchEngine />
+      <SearchTab />
     </div>
   );
 }
