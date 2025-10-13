@@ -7,11 +7,11 @@ import {
   Button,
   Typography,
   Box,
-  Chip,
   Divider,
   IconButton,
   Paper
 } from '@mui/material';
+import SimulationWindowChip from './SimulationWindowChip';
 import {
   Close,
   LocalFireDepartment,
@@ -23,7 +23,6 @@ import {
   Person,
   Link as LinkIcon,
   CalendarToday,
-  School
 } from '@mui/icons-material';
 
 function SimulationWindow({ open, onClose, simulation }) {
@@ -62,12 +61,15 @@ function SimulationWindow({ open, onClose, simulation }) {
     <Dialog
       open={open}
       onClose={onClose}
-      maxWidth="md"
+      maxWidth={false}
       fullWidth
       PaperProps={{
         sx: {
           borderRadius: 2,
-          maxHeight: '90vh'
+          maxHeight: '90vh',
+          width: '100%',
+          margin: { xs: 1, sm: 2 },
+          maxWidth: { xs: 'calc(100vw - 16px)', sm: '600px', md: '700px', lg: '800px' }
         }
       }}
     >
@@ -75,9 +77,11 @@ function SimulationWindow({ open, onClose, simulation }) {
         display: 'flex', 
         justifyContent: 'space-between', 
         alignItems: 'center',
-        pb: 1
+        pb: 1,
+        px: 2,
+        py: 1.5
       }}>
-        <Typography variant="h5" component="h2" sx={{ fontWeight: 'bold' }}>
+        <Typography variant="h6" component="h2" sx={{ fontWeight: 'bold', fontSize: { xs: '1.25rem', sm: '1.5rem', md: '2rem' } }}>
           {simulation.title || 'סימולציה ללא כותרת'}
         </Typography>
         <IconButton onClick={onClose} size="small">
@@ -85,44 +89,44 @@ function SimulationWindow({ open, onClose, simulation }) {
         </IconButton>
       </DialogTitle>
 
-      <DialogContent dividers>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+      <DialogContent dividers sx={{ px: { xs: 2.5, md: 4 }, py: { xs: 2, md: 3.5 } }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 2.5, md: 4 } }}>
           {/* Main Info Section */}
-          <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+          <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap' }}>
             {/* Type */}
             <Paper sx={{ 
-              p: 2, 
+              p: { xs: 2, md: 3 }, 
               flex: 1, 
-              minWidth: 200,
+              minWidth: 180,
               backgroundColor: `${typeConfig.color}10`,
-              border: `2px solid ${typeConfig.color}30`
+              border: `1px solid ${typeConfig.color}30`
             }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                <typeConfig.icon sx={{ color: typeConfig.color, fontSize: 24 }} />
-                <Typography variant="h6" sx={{ color: typeConfig.color, fontWeight: 'bold' }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
+                <typeConfig.icon sx={{ color: typeConfig.color, fontSize: { xs: 20, md: 28 } }} />
+                <Typography variant="subtitle2" sx={{ color: typeConfig.color, fontWeight: 'bold', fontSize: { xs: '0.9rem', md: '1.1rem' } }}>
                   סוג הסימולציה
                 </Typography>
               </Box>
-              <Typography variant="body1" sx={{ color: typeConfig.color, fontWeight: 'medium' }}>
+              <Typography variant="body2" sx={{ color: typeConfig.color, fontWeight: 'medium', fontSize: { xs: '0.85rem', md: '1rem' } }}>
                 {simulation.type || 'לא מוגדר'}
               </Typography>
             </Paper>
 
             {/* Difficulty */}
             <Paper sx={{ 
-              p: 2, 
+              p: { xs: 2, md: 3 }, 
               flex: 1, 
-              minWidth: 200,
+              minWidth: 180,
               backgroundColor: `${difficultyConfig.color}10`,
-              border: `2px solid ${difficultyConfig.color}30`
+              border: `1px solid ${difficultyConfig.color}30`
             }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                <difficultyConfig.icon sx={{ color: difficultyConfig.color, fontSize: 24 }} />
-                <Typography variant="h6" sx={{ color: difficultyConfig.color, fontWeight: 'bold' }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
+                <difficultyConfig.icon sx={{ color: difficultyConfig.color, fontSize: { xs: 20, md: 28 } }} />
+                <Typography variant="subtitle2" sx={{ color: difficultyConfig.color, fontWeight: 'bold', fontSize: { xs: '0.9rem', md: '1.1rem' } }}>
                   רמת קושי
                 </Typography>
               </Box>
-              <Typography variant="body1" sx={{ color: difficultyConfig.color, fontWeight: 'medium' }}>
+              <Typography variant="body2" sx={{ color: difficultyConfig.color, fontWeight: 'medium', fontSize: { xs: '0.85rem', md: '1rem' } }}>
                 {simulation.difficulty || 'לא מוגדר'}
               </Typography>
             </Paper>
@@ -130,126 +134,93 @@ function SimulationWindow({ open, onClose, simulation }) {
 
           <Divider />
 
-          {/* Topics and Roles Section */}
+          {/* Topics Section */}
           <Box>
-            <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Help sx={{ fontSize: 20 }} />
-              נושאים ותפקידים
+            <Typography variant="subtitle1" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: { xs: '1rem', md: '1.4rem' }, fontWeight: 'bold' }}>
+              <Help sx={{ fontSize: { xs: 18, md: 26 } }} />
+              נושאי הסימולציה
             </Typography>
             
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              {/* Main Topic */}
+              {/* All Topics Combined */}
               <Box>
-                <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 1 }}>
-                  נושא מרכזי:
-                </Typography>
-                <Chip 
-                  label={simulation.main_sim_topic || 'לא מוגדר'} 
-                  color="primary" 
-                  variant="outlined"
-                  sx={{ fontSize: '0.9rem', fontWeight: 'medium' }}
-                />
-              </Box>
-
-              {/* Main Role */}
-              <Box>
-                <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 1 }}>
-                  תפקיד מרכזי:
-                </Typography>
-                <Chip 
-                  label={simulation.main_role_tag || 'כללי'} 
-                  color="secondary" 
-                  variant="outlined"
-                  sx={{ fontSize: '0.9rem', fontWeight: 'medium' }}
-                />
-              </Box>
-
-              {/* Additional Topics */}
-              {simulation.additional_sim_topics && simulation.additional_sim_topics.length > 0 && (
-                <Box>
-                  <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 1 }}>
-                    נושאים נוספים:
-                  </Typography>
-                  <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                    {simulation.additional_sim_topics.map((topic, index) => (
-                      <Chip 
-                        key={index}
-                        label={topic} 
-                        size="small"
-                        variant="outlined"
-                        sx={{ fontSize: '0.8rem' }}
-                      />
-                    ))}
-                  </Box>
+                <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                  {/* Main topic first */}
+                  {simulation.main_sim_topic && (
+                    <SimulationWindowChip label={simulation.main_sim_topic} />
+                  )}
+                  {/* Additional topics */}
+                  {simulation.additional_sim_topics && simulation.additional_sim_topics.map((topic, index) => (
+                    <SimulationWindowChip key={index} label={topic} />
+                  ))}
+                  {/* Show generic message if no topics */}
+                  {!simulation.main_sim_topic && (!simulation.additional_sim_topics || simulation.additional_sim_topics.length === 0) && (
+                    <Typography variant="body2" sx={{ color: 'text.secondary', fontStyle: 'italic', fontSize: { xs: '0.85rem', md: '1rem' } }}>
+                      לסימולציה זו לא משוייכים נושאים
+                    </Typography>
+                  )}
                 </Box>
-              )}
-
-              {/* Additional Roles */}
-              {simulation.additional_role_tags && simulation.additional_role_tags.length > 0 && (
-                <Box>
-                  <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 1 }}>
-                    תפקידים נוספים:
-                  </Typography>
-                  <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                    {simulation.additional_role_tags.map((role, index) => (
-                      <Chip 
-                        key={index}
-                        label={role} 
-                        size="small"
-                        variant="outlined"
-                        sx={{ fontSize: '0.8rem' }}
-                      />
-                    ))}
-                  </Box>
-                </Box>
-              )}
+              </Box>
             </Box>
           </Box>
 
-          <Divider />
-
-          {/* Week Information */}
+          {/* Roles Section */}
           <Box>
-            <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <CalendarToday sx={{ fontSize: 20 }} />
-              מידע שבועי
+            <Typography variant="subtitle1" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: { xs: '1rem', md: '1.4rem' }, fontWeight: 'bold' }}>
+              <Person sx={{ fontSize: { xs: 18, md: 26 } }} />
+              מסלולים ועיסוקים רלוונטיים
             </Typography>
             
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              {/* Main Week */}
-              {simulation.main_week && (
-                <Box>
-                  <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 1 }}>
-                    שבוע מרכזי:
-                  </Typography>
-                  <Chip 
-                    label={simulation.main_week} 
-                    color="info" 
-                    variant="outlined"
-                    sx={{ fontSize: '0.9rem', fontWeight: 'medium' }}
-                  />
+              {/* All Roles Combined */}
+              <Box>
+                <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                  {/* Main role first */}
+                  {simulation.main_role_tag && (
+                    <SimulationWindowChip label={simulation.main_role_tag} />
+                  )}
+                  {/* Additional roles */}
+                  {simulation.additional_role_tags && simulation.additional_role_tags.map((role, index) => (
+                    <SimulationWindowChip key={index} label={role} />
+                  ))}
+                  {/* Show generic message if no roles */}
+                  {!simulation.main_role_tag && (!simulation.additional_role_tags || simulation.additional_role_tags.length === 0) && (
+                    <Typography variant="body2" sx={{ color: 'text.secondary', fontStyle: 'italic', fontSize: { xs: '0.85rem', md: '1rem' } }}>
+                      סימולציה זו מתאימה לכל תפקיד.
+                    </Typography>
+                  )}
                 </Box>
-              )}
+              </Box>
+            </Box>
+          </Box>
 
-              {/* Additional Weeks */}
-              {simulation.additional_weeks && simulation.additional_weeks.length > 0 && (
-                <Box>
-                  <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 1 }}>
-                    שבועות נוספים:
-                  </Typography>
-                  <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                    {simulation.additional_weeks.map((week, index) => (
-                      <Chip 
-                        key={index}
-                        label={week} 
-                        size="small"
-                        variant="outlined"
-                        sx={{ fontSize: '0.8rem' }}
-                      />
-                    ))}
-                  </Box>
+          {/* Week Information */}
+          <Box>
+            <Typography variant="subtitle1" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: { xs: '1rem', md: '1.4rem' }, fontWeight: 'bold' }}>
+              <CalendarToday sx={{ fontSize: { xs: 18, md: 26 } }} />
+              שבועות מתאימים
+            </Typography>
+            
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              {/* All Weeks Combined */}
+              <Box>
+                <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                  {/* Main week first */}
+                  {simulation.main_week && (
+                    <SimulationWindowChip label={simulation.main_week} />
+                  )}
+                  {/* Additional weeks */}
+                  {simulation.additional_weeks && simulation.additional_weeks.map((week, index) => (
+                    <SimulationWindowChip key={index} label={week} />
+                  ))}
+                  {/* Show generic message if no weeks */}
+                  {!simulation.main_week && (!simulation.additional_weeks || simulation.additional_weeks.length === 0) && (
+                    <Typography variant="body2" sx={{ color: 'text.secondary', fontStyle: 'italic', fontSize: { xs: '0.85rem', md: '1rem' } }}>
+                      סימולציה זו מתאימה לכל שבוע.
+                    </Typography>
+                  )}
                 </Box>
-              )}
+              </Box>
             </Box>
           </Box>
 
@@ -258,33 +229,43 @@ function SimulationWindow({ open, onClose, simulation }) {
           {/* Link Section */}
           {simulation.url && (
             <Box>
-              <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <LinkIcon sx={{ fontSize: 20 }} />
-                קישור לסימולציה
+              <Typography variant="subtitle1" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: { xs: '1rem', md: '1.4rem' }, fontWeight: 'bold' }}>
+                <LinkIcon sx={{ fontSize: { xs: 18, md: 26 } }} />
+                קבצים מצורפים
               </Typography>
               <Button
                 variant="contained"
                 color="primary"
-                startIcon={<LinkIcon />}
                 href={simulation.url}
                 target="_blank"
                 rel="noopener noreferrer"
+                size="small"
                 sx={{ 
                   textTransform: 'none',
                   fontWeight: 'medium',
-                  px: 3,
-                  py: 1
+                  px: { xs: 1, md: 1 },
+                  py: { xs: 0.5, md: 0.5 },
+                  fontSize: { xs: '0.8rem', md: '1rem' },
+                  minHeight: 'auto',
+                  '& .MuiButton-startIcon': {
+                    marginRight: { xs: 0.25, md: 0.5 }
+                  }
                 }}
               >
-                פתח סימולציה
+                מסמך אישור תוכניות
               </Button>
             </Box>
           )}
         </Box>
       </DialogContent>
 
-      <DialogActions sx={{ p: 2 }}>
-        <Button onClick={onClose} variant="outlined" sx={{ textTransform: 'none' }}>
+      <DialogActions sx={{ p: 2, px: 2.5 }}>
+        <Button onClick={onClose} variant="outlined" size="small" sx={{ 
+          textTransform: 'none', 
+          fontSize: { xs: '0.85rem', md: '1rem' },
+          px: { xs: 2, md: 3 },
+          py: { xs: 0.75, md: 1 }
+        }}>
           סגור
         </Button>
       </DialogActions>

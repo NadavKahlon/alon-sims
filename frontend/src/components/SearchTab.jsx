@@ -66,22 +66,33 @@ function SearchTab() {
 
     return (
         <>
-            <Box sx={{ p: 3 }}>
-                {all_sims.length === 0 ? (
-                    <Typography variant="body1" color="text.secondary">
-                        לא נמצאו סימולציות מתאימות.
-                    </Typography>
-                ) : (
-                    <Box>
-                        {all_sims.map((simulation, index) => (
-                            <SimulationListEntry 
-                                key={simulation.id || index} 
-                                simulation={simulation}
-                                onClick={() => handleSimulationClick(simulation)}
-                            />
-                        ))}
-                    </Box>
-                )}
+            <Box sx={{ 
+                p: 3, 
+                display: 'flex', 
+                justifyContent: 'center',
+                width: '100%'
+            }}>
+                <Box sx={{ 
+                    width: '100%', 
+                    maxWidth: 800,
+                    minWidth: 300
+                }}>
+                    {all_sims.length === 0 ? (
+                        <Typography variant="body1" color="text.secondary">
+                            לא נמצאו סימולציות מתאימות.
+                        </Typography>
+                    ) : (
+                        <Box>
+                            {all_sims.map((simulation, index) => (
+                                <SimulationListEntry 
+                                    key={simulation.id || index} 
+                                    simulation={simulation}
+                                    onClick={() => handleSimulationClick(simulation)}
+                                />
+                            ))}
+                        </Box>
+                    )}
+                </Box>
             </Box>
             
             <SimulationWindow 

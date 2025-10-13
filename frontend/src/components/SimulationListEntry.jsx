@@ -2,7 +2,7 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
-import { LocalFireDepartment, MenuBook, CheckCircle, Warning, Error, Help, Person } from '@mui/icons-material';
+import { LocalFireDepartment, MenuBook, CheckCircle, Warning, Error, Help, Person, CalendarToday } from '@mui/icons-material';
 
 function SimulationListEntry({ simulation, onClick }) {
 
@@ -40,14 +40,15 @@ function SimulationListEntry({ simulation, onClick }) {
       elevation={2} 
       onClick={onClick}
       sx={{ 
-        p: 2, 
-        mb: 2, 
-        borderRadius: 2,
+        p: { xs: 1.5, md: 3 }, 
+        mb: { xs: 1.5, md: 2.5 }, 
+        borderRadius: { xs: 1.5, md: 2 },
         display: 'flex',
-        alignItems: 'center',
-        gap: 2,
+        alignItems: 'stretch',
+        gap: { xs: 1.5, md: 3 },
         cursor: 'pointer',
         transition: 'all 0.2s ease-in-out',
+        minHeight: { xs: 80, md: 140 },
         '&:hover': {
           elevation: 6,
           transform: 'translateY(-2px)',
@@ -61,19 +62,35 @@ function SimulationListEntry({ simulation, onClick }) {
       }}
     >
       {/* Right side - Type and Difficulty slots (RTL) */}
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, minWidth: 80, order: 2 }}>
+      <Box sx={{ 
+        display: 'flex', 
+        flexDirection: 'column', 
+        gap: { xs: 0.5, md: 1 }, 
+        minWidth: { xs: 45, md: 160 },
+        width: { xs: 45, md: 160 },
+        order: 2,
+        justifyContent: 'stretch'
+      }}>
         {/* Type slot */}
         <Box sx={{ 
           display: 'flex', 
           alignItems: 'center', 
-          gap: 1,
-          p: 1,
-          borderRadius: 1,
+          gap: { xs: 0.5, md: 1 },
+          p: { xs: 0.5, md: 1.5 },
+          borderRadius: { xs: 0.5, md: 1 },
           backgroundColor: `${typeConfig.color}20`,
-          border: `1px solid ${typeConfig.color}40`
+          border: `1px solid ${typeConfig.color}40`,
+          flex: 1,
+          justifyContent: 'center',
+          flexDirection: { xs: 'column', md: 'row' }
         }}>
-          <typeConfig.icon sx={{ color: typeConfig.color, fontSize: 20 }} />
-          <Typography variant="caption" sx={{ color: typeConfig.color, fontWeight: 'bold' }}>
+          <typeConfig.icon sx={{ color: typeConfig.color, fontSize: { xs: 14, md: 24 } }} />
+          <Typography variant="caption" sx={{ 
+            color: typeConfig.color, 
+            fontWeight: 'bold', 
+            fontSize: { xs: '0.6rem', md: '0.9rem' }, 
+            textAlign: 'center' 
+          }}>
             {simulation.type || 'סוג'}
           </Typography>
         </Box>
@@ -82,55 +99,86 @@ function SimulationListEntry({ simulation, onClick }) {
         <Box sx={{ 
           display: 'flex', 
           alignItems: 'center', 
-          gap: 1,
-          p: 1,
-          borderRadius: 1,
+          gap: { xs: 0.5, md: 1 },
+          p: { xs: 0.5, md: 1.5 },
+          borderRadius: { xs: 0.5, md: 1 },
           backgroundColor: `${difficultyConfig.color}20`,
-          border: `1px solid ${difficultyConfig.color}40`
+          border: `1px solid ${difficultyConfig.color}40`,
+          flex: 1,
+          justifyContent: 'center',
+          flexDirection: { xs: 'column', md: 'row' }
         }}>
-          <difficultyConfig.icon sx={{ color: difficultyConfig.color, fontSize: 20 }} />
-          <Typography variant="caption" sx={{ color: difficultyConfig.color, fontWeight: 'bold' }}>
+          <difficultyConfig.icon sx={{ color: difficultyConfig.color, fontSize: { xs: 14, md: 24 } }} />
+          <Typography variant="caption" sx={{ 
+            color: difficultyConfig.color, 
+            fontWeight: 'bold', 
+            fontSize: { xs: '0.6rem', md: '0.9rem' }, 
+            textAlign: 'center' 
+          }}>
             {simulation.difficulty || 'רמה'}
           </Typography>
         </Box>
       </Box>
 
       {/* Left side - Content (RTL) */}
-      <Box sx={{ flex: 1, order: 1 }}>
-        <Typography variant="h6" component="h3" gutterBottom>
+      <Box sx={{ flex: 1, order: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <Typography variant="subtitle1" component="h3" sx={{ 
+          fontSize: { xs: '1rem', md: '1.4rem' }, 
+          fontWeight: 600, 
+          mb: { xs: 0.75, md: 1.5 } 
+        }}>
           {simulation.title || 'סימולציה ללא כותרת'}
         </Typography>
         
-        <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 1 }}>
+        <Box sx={{ display: 'flex', gap: { xs: 0.75, md: 1.5 }, flexWrap: 'wrap' }}>
           <Box sx={{ 
             backgroundColor: 'grey.200', 
             color: 'grey.700',
-            px: 1,
-            py: 0.5,
-            borderRadius: 1,
-            fontSize: '0.75rem',
+            px: { xs: 0.75, md: 1.5 },
+            py: { xs: 0.25, md: 0.75 },
+            borderRadius: { xs: 0.75, md: 1.5 },
+            fontSize: { xs: '0.65rem', md: '0.85rem' },
             display: 'flex',
             alignItems: 'center',
-            gap: 0.5
+            gap: { xs: 0.25, md: 0.5 }
           }}>
-            <Help sx={{ fontSize: 16 }} />
+            <Help sx={{ fontSize: { xs: 12, md: 16 } }} />
             {simulation.main_sim_topic || 'נושא ראשי'}
           </Box>
           
-          <Box sx={{ 
-            backgroundColor: 'grey.200', 
-            color: 'grey.700',
-            px: 1,
-            py: 0.5,
-            borderRadius: 1,
-            fontSize: '0.75rem',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 0.5
-          }}>
-            <Person sx={{ fontSize: 16 }} />
-            {simulation.main_role_tag || 'כללי'}
-          </Box>
+          {simulation.main_role_tag && (
+            <Box sx={{ 
+              backgroundColor: 'grey.200', 
+              color: 'grey.700',
+              px: { xs: 0.75, md: 1.5 },
+              py: { xs: 0.25, md: 0.75 },
+              borderRadius: { xs: 0.75, md: 1.5 },
+              fontSize: { xs: '0.65rem', md: '0.85rem' },
+              display: 'flex',
+              alignItems: 'center',
+              gap: { xs: 0.25, md: 0.5 }
+            }}>
+              <Person sx={{ fontSize: { xs: 12, md: 16 } }} />
+              {simulation.main_role_tag}
+            </Box>
+          )}
+
+          {simulation.main_week && (
+            <Box sx={{ 
+              backgroundColor: 'grey.200', 
+              color: 'grey.700',
+              px: { xs: 0.75, md: 1.5 },
+              py: { xs: 0.25, md: 0.75 },
+              borderRadius: { xs: 0.75, md: 1.5 },
+              fontSize: { xs: '0.65rem', md: '0.85rem' },
+              display: 'flex',
+              alignItems: 'center',
+              gap: { xs: 0.25, md: 0.5 }
+            }}>
+              <CalendarToday sx={{ fontSize: { xs: 12, md: 16 } }} />
+              {simulation.main_week}
+            </Box>
+          )}
         </Box>
       </Box>
     </Paper>
