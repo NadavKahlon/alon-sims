@@ -3,11 +3,14 @@ import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import SimulationListEntry from './SimulationListEntry';
+import SimulationWindow from './SimulationWindow';
 
 function SearchTab() {
     const [serverData, setServerData] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [selectedSimulation, setSelectedSimulation] = useState(null);
+    const [isWindowOpen, setIsWindowOpen] = useState(false);
 
     useEffect(() => {
         const abortController = new AbortController();
@@ -39,6 +42,16 @@ function SearchTab() {
     const role_tags = useMemo(() => serverData?.role_tags ?? [], [serverData]);
     const week_topics = useMemo(() => serverData?.week_topics ?? [], [serverData]);
 
+    const handleSimulationClick = (simulation) => {
+        setSelectedSimulation(simulation);
+        setIsWindowOpen(true);
+    };
+
+    const handleCloseWindow = () => {
+        setIsWindowOpen(false);
+        setSelectedSimulation(null);
+    };
+
     if (isLoading) {
         return (
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100vh' }}>
@@ -52,22 +65,31 @@ function SearchTab() {
     }
 
     return (
-        <Box sx={{ p: 3 }}>
-            {all_sims.length === 0 ? (
-                <Typography variant="body1" color="text.secondary">
-                    לא נמצאו סימולציות מתאימות.
-                </Typography>
-            ) : (
-                <Box>
-                    {all_sims.map((simulation, index) => (
-                        <SimulationListEntry 
-                            key={simulation.id || index} 
-                            simulation={simulation} 
-                        />
-                    ))}
-                </Box>
-            )}
-        </Box>
+        <>
+            <Box sx={{ p: 3 }}>
+                {all_sims.length === 0 ? (
+                    <Typography variant="body1" color="text.secondary">
+                        לא נמצאו סימולציות מתאימות.
+                    </Typography>
+                ) : (
+                    <Box>
+                        {all_sims.map((simulation, index) => (
+                            <SimulationListEntry 
+                                key={simulation.id || index} 
+                                simulation={simulation}
+                                onClick={() => handleSimulationClick(simulation)}
+                            />
+                        ))}
+                    </Box>
+                )}
+            </Box>
+            
+            <SimulationWindow 
+                open={isWindowOpen}
+                onClose={handleCloseWindow}
+                simulation={selectedSimulation}
+            />
+        </>
     );
 }
 

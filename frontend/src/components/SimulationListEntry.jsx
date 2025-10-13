@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import { LocalFireDepartment, MenuBook, CheckCircle, Warning, Error, Help, Person } from '@mui/icons-material';
 
-function SimulationListEntry({ simulation }) {
+function SimulationListEntry({ simulation, onClick }) {
 
   // Get type color and icon
   const getTypeConfig = (type) => {
@@ -30,7 +30,7 @@ function SimulationListEntry({ simulation }) {
       default:
         return { color: '#9e9e9e', icon: CheckCircle };
     }
-  };
+  };  
 
   const typeConfig = getTypeConfig(simulation.type);
   const difficultyConfig = getDifficultyConfig(simulation.difficulty);
@@ -38,6 +38,7 @@ function SimulationListEntry({ simulation }) {
   return (
     <Paper 
       elevation={2} 
+      onClick={onClick}
       sx={{ 
         p: 2, 
         mb: 2, 
@@ -45,9 +46,17 @@ function SimulationListEntry({ simulation }) {
         display: 'flex',
         alignItems: 'center',
         gap: 2,
+        cursor: 'pointer',
+        transition: 'all 0.2s ease-in-out',
         '&:hover': {
-          elevation: 4,
-          transition: 'elevation 0.2s ease-in-out'
+          elevation: 6,
+          transform: 'translateY(-2px)',
+          boxShadow: '0 8px 25px rgba(0,0,0,0.15)',
+          backgroundColor: 'rgba(0,0,0,0.02)'
+        },
+        '&:active': {
+          transform: 'translateY(0px)',
+          elevation: 2
         }
       }}
     >
