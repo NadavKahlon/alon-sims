@@ -77,3 +77,65 @@ class WeekTopic(models.Model):
 
     def __str__(self):
         return self.topic
+
+
+class Simulation(models.Model):
+    """A simulation."""
+    url = models.URLField(verbose_name="קישור")
+    main_sim_topic = models.ForeignKey(
+        SimulationTopic,
+        on_delete=models.PROTECT,
+        related_name="main_topic_simulations",
+        verbose_name="נושא מרכזי",
+    )
+    main_role_tag = models.ForeignKey(
+        RoleTag,
+        on_delete=models.PROTECT,
+        related_name="main_role_tag_simulations",
+        verbose_name="תגית תפקיד מרכזית",
+    )
+    type = models.CharField(
+        max_length=20,
+        choices=SimulationType.choices,
+        verbose_name="סוג",
+    )
+    main_week = models.ForeignKey(
+        "WeekTopic",
+        on_delete=models.PROTECT,
+        related_name="main_week_simulations",
+        verbose_name="שבוע מרכזי",
+    )
+    difficulty = models.CharField(
+        max_length=10,
+        choices=SimulationDifficulty.choices,
+        verbose_name="רמת קושי",
+    )
+    additional_sim_topics = models.ManyToManyField(
+        SimulationTopic,
+        related_name="additional_topic_simulations",
+        verbose_name="נושאים נוספים",
+        blank=True,
+    )
+    additional_role_tags = models.ManyToManyField(
+        RoleTag,
+        related_name="additional_role_tag_simulations",
+        verbose_name="תגיות תפקיד נוספות",
+        blank=True,
+    )
+    additional_weeks = models.ManyToManyField(
+        "WeekTopic",
+        related_name="additional_week_simulations",
+        verbose_name="שבועות אפשריים נוספים",
+        blank=True,
+    )
+
+    class Meta:
+        verbose_name = "סימולציה"
+        verbose_name_plural = "סימולציות"
+        indexes = [
+            models.Index(fields=["type"]),
+            models.Index(fields=["difficulty"]),
+        ]
+
+    def __str__(self):
+        return f"{self.main_sim_topic} - {self.main_role_tag}"
