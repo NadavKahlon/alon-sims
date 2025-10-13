@@ -8,45 +8,93 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='RoleTag',
+            name="RoleTag",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=80, unique=True, verbose_name='שם')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(max_length=80, unique=True, verbose_name="שם"),
+                ),
             ],
             options={
-                'verbose_name': 'תג תפקיד',
-                'verbose_name_plural': 'תגי תפקיד',
-                'indexes': [models.Index(fields=['name'], name='api_roletag_name_6dd579_idx')],
+                "verbose_name": "תג תפקיד",
+                "verbose_name_plural": "תגי תפקיד",
+                "indexes": [
+                    models.Index(fields=["name"], name="api_roletag_name_6dd579_idx")
+                ],
             },
         ),
         migrations.CreateModel(
-            name='TopicTagType',
+            name="TopicTagType",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=80, unique=True, verbose_name='שם')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(max_length=80, unique=True, verbose_name="שם"),
+                ),
             ],
             options={
-                'verbose_name': 'סוג תג נושא',
-                'verbose_name_plural': 'סוגי תגי נושא',
-                'indexes': [models.Index(fields=['name'], name='api_topicta_name_551eef_idx')],
+                "verbose_name": "סוג תג נושא",
+                "verbose_name_plural": "סוגי תגי נושא",
+                "indexes": [
+                    models.Index(fields=["name"], name="api_topicta_name_551eef_idx")
+                ],
             },
         ),
         migrations.CreateModel(
-            name='TopicTag',
+            name="TopicTag",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=80, unique=True, verbose_name='שם')),
-                ('type', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='topic_tags', to='api.topictagtype', verbose_name='סוג')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(max_length=80, unique=True, verbose_name="שם"),
+                ),
+                (
+                    "type",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name="topic_tags",
+                        to="api.topictagtype",
+                        verbose_name="סוג",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'תג נושא',
-                'verbose_name_plural': 'תגי נושא',
-                'indexes': [models.Index(fields=['name'], name='api_topicta_name_b45016_idx')],
+                "verbose_name": "תג נושא",
+                "verbose_name_plural": "תגי נושא",
+                "indexes": [
+                    models.Index(fields=["name"], name="api_topicta_name_b45016_idx")
+                ],
             },
         ),
     ]

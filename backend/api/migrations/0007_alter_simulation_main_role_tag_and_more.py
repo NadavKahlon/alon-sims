@@ -7,18 +7,32 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0006_simulation'),
+        ("api", "0006_simulation"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='simulation',
-            name='main_role_tag',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='main_role_tag_simulations', to='api.roletag', verbose_name='תגית תפקיד מרכזית'),
+            model_name="simulation",
+            name="main_role_tag",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="main_role_tag_simulations",
+                to="api.roletag",
+                verbose_name="תגית תפקיד מרכזית",
+            ),
         ),
         migrations.AlterField(
-            model_name='simulation',
-            name='main_week',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='main_week_simulations', to='api.weektopic', verbose_name='שבוע מרכזי'),
+            model_name="simulation",
+            name="main_week",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="main_week_simulations",
+                to="api.weektopic",
+                verbose_name="שבוע מרכזי",
+            ),
         ),
     ]
