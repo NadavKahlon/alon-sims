@@ -70,6 +70,7 @@ class WeekTopic(models.Model):
     """The topic of a week in officers' training."""
 
     topic = models.CharField("נושא", max_length=80, unique=True)
+    serial_num = models.IntegerField("מספר סודר")
 
     class Meta:
         verbose_name = "נושא שבועי"
