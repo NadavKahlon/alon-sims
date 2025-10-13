@@ -23,6 +23,7 @@ def list_simulations(request):
         data.append(
             {
                 "id": sim.id,
+                "title": str(sim),
                 "url": sim.url,
                 "main_sim_topic": sim.main_sim_topic.name,
                 "main_role_tag": sim.main_role_tag.name if sim.main_role_tag else None,
