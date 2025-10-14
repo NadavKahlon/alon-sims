@@ -45,6 +45,16 @@ function SearchTab() {
         })),
         [serverData]
     );
+
+    // Build role sections from the server data (flat structure with grey color)
+    const roleSections = useMemo(() => {
+        const roleTags = serverData?.role_tags ?? [];
+        return [{
+            type: 'תפקידים',
+            items: roleTags,
+            color: '#424242' // Grey color for all role chips
+        }];
+    }, [serverData]);
     
     const [searchObject, setSearchObject] = useState({
         simTopics: [],
@@ -62,6 +72,7 @@ function SearchTab() {
     // Toggles for open windows
     const [openedSimulation, setOpenedSimulation] = useState(null);
     const [isTopicWindowOpen, setIsTopicWindowOpen] = useState(false);
+    const [isRoleWindowOpen, setIsRoleWindowOpen] = useState(false);
 
     // Callbacks
     const handleCloseSimulation = useCallback(() => {
@@ -70,11 +81,20 @@ function SearchTab() {
     const handleSimTopicsChange = useCallback((sel) => {
         setSearchObject((prev) => ({ ...prev, simTopics: sel }));
     }, []);
+    const handleRoleTagsChange = useCallback((sel) => {
+        setSearchObject((prev) => ({ ...prev, roleTags: sel }));
+    }, []);
     const handleAdvancedClick = useCallback(() => {
         setIsTopicWindowOpen(true);
     }, []);
+    const handleRoleAdvancedClick = useCallback(() => {
+        setIsRoleWindowOpen(true);
+    }, []);
     const handleTopicWindowClose = useCallback(() => {
         setIsTopicWindowOpen(false);
+    }, []);
+    const handleRoleWindowClose = useCallback(() => {
+        setIsRoleWindowOpen(false);
     }, []);
 
     if (serverData === null) {
@@ -114,6 +134,15 @@ function SearchTab() {
                             onAdvanced={handleAdvancedClick}
                         />
                     </Box>
+                    <Box sx={{ mb: 2 }}>
+                        <ChipSearchBar
+                            sections={roleSections}
+                            selected={searchObject.roleTags}
+                            label={"מסלולים ועיסוקים"}
+                            onSelectedChange={handleRoleTagsChange}
+                            onAdvanced={handleRoleAdvancedClick}
+                        />
+                    </Box>
                     <SimulationList 
                         simulations={displayedSims}
                         onSimulationClick={setOpenedSimulation}
@@ -128,6 +157,16 @@ function SearchTab() {
                 initialSelected={searchObject.simTopics}
                 onSelectedChange={handleSimTopicsChange}
                 onClose={handleTopicWindowClose}
+            />
+
+            <ChipSelectWindow
+                open={isRoleWindowOpen}
+                header={"מסלולים ועיסוקים"}
+                sections={roleSections}
+                initialSelected={searchObject.roleTags}
+                onSelectedChange={handleRoleTagsChange}
+                onClose={handleRoleWindowClose}
+                flat={true}
             />
 
             <SimulationWindow 
