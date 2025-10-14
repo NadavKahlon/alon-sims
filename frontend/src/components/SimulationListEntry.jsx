@@ -18,7 +18,7 @@ function SimulationListEntry({ simulation, onClick }) {
       case 'פורמלית':
         return { color: '#2196f3', icon: MenuBook };
       default:
-        return { color: '#9e9e9e', icon: MenuBook };
+        return { color: '#2196f3', icon: MenuBook };
     }
   };
 
