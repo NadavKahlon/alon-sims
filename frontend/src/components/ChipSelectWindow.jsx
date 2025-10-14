@@ -11,6 +11,7 @@ import Divider from '@mui/material/Divider';
 import Paper from '@mui/material/Paper';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
+import { useTheme } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
 
 /**
@@ -26,6 +27,7 @@ import CloseIcon from '@mui/icons-material/Close';
  * - flat?: boolean (if true, displays all chips in a single section without grouping)
  */
 function ChipSelectWindow({ open, header, sections, initialSelected = [], onSelectedChange, onClose, flat = false }) {
+    const theme = useTheme();
     const normalizedSections = useMemo(() => Array.isArray(sections) ? sections : [], [sections]);
     const [selected, setSelected] = useState(Array.isArray(initialSelected) ? initialSelected : []);
     const onSelectedChangeRef = useRef(onSelectedChange);
@@ -108,7 +110,7 @@ function ChipSelectWindow({ open, header, sections, initialSelected = [], onSele
                     {normalizedSections.flatMap(section => section.items || []).map((label) => {
                         // Find the section this item belongs to for color
                         const section = normalizedSections.find(s => s.items?.includes(label));
-                        const color = section?.color || '#9e9e9e';
+                        const color = section?.color || theme.palette.text.disabled;
                         
                         return (
                             <Chip
@@ -119,7 +121,7 @@ function ChipSelectWindow({ open, header, sections, initialSelected = [], onSele
                                 variant={selected.includes(label) ? 'filled' : 'outlined'}
                                 sx={{
                                     bgcolor: selected.includes(label) ? color : 'transparent',
-                                    color: selected.includes(label) ? '#fff' : color,
+                                    color: selected.includes(label) ? theme.palette.common.white : color,
                                     borderColor: color,
                                     fontWeight: 500,
                                     '&:hover': {
@@ -167,7 +169,7 @@ function ChipSelectWindow({ open, header, sections, initialSelected = [], onSele
                                         variant={selected.includes(label) ? 'filled' : 'outlined'}
                                         sx={{
                                             bgcolor: selected.includes(label) ? section.color : 'transparent',
-                                            color: selected.includes(label) ? '#fff' : section.color,
+                                            color: selected.includes(label) ? theme.palette.common.white : section.color,
                                             borderColor: section.color,
                                             fontWeight: 500,
                                             '&:hover': {

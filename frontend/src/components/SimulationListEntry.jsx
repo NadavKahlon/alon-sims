@@ -2,37 +2,31 @@ import React, { useCallback } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
+import { useTheme } from '@mui/material/styles';
 import { LocalFireDepartment, MenuBook, CheckCircle, Warning, Error, Help, Person, CalendarToday } from '@mui/icons-material';
 
 function SimulationListEntry({ simulation, onClick }) {
+  const theme = useTheme();
 
   const handleClick = useCallback(() => {
     onClick(simulation);
   }, [onClick, simulation]);
 
   // Get type color and icon
-  const getTypeConfig = (type) => {
-    switch (type) {
-      case 'מתפרצת':
-        return { color: '#ff9800', icon: LocalFireDepartment };
-      case 'פורמלית':
-        return { color: '#2196f3', icon: MenuBook };
-      default:
-        return { color: '#2196f3', icon: MenuBook };
-    }
-  };
+  const getTypeConfig = (type) =>
+    type === 'מתפרצת'
+      ? { color: theme.palette.simulation.type.explosive, icon: LocalFireDepartment }
+      : { color: theme.palette.simulation.type.formal, icon: MenuBook };
 
   // Get difficulty color and icon
   const getDifficultyConfig = (difficulty) => {
     switch (difficulty?.toLowerCase()) {
-      case 'קלה':
-        return { color: '#4caf50', icon: CheckCircle };
       case 'בינונית':
-        return { color: '#ffc107', icon: Warning };
+        return { color: theme.palette.simulation.difficulty.medium, icon: Warning };
       case 'קשה':
-        return { color: '#f44336', icon: Error };
+        return { color: theme.palette.simulation.difficulty.hard, icon: Error };
       default:
-        return { color: '#9e9e9e', icon: CheckCircle };
+        return { color: theme.palette.simulation.difficulty.easy, icon: CheckCircle };
     }
   };  
 

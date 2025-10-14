@@ -8,6 +8,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Collapse from '@mui/material/Collapse';
 import Button from '@mui/material/Button';
+import { useTheme } from '@mui/material/styles';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import SimulationList from './SimulationList';
@@ -18,6 +19,7 @@ import ChipSearchBar from './ChipSearchBar';
 import ChipSelectWindow from './ChipSelectWindow';
 
 function SearchTab() {
+    const theme = useTheme();
 
     // Getting data from the server
     const [serverData, setServerData] = useState(null);
@@ -60,9 +62,9 @@ function SearchTab() {
         return [{
             type: 'תפקידים',
             items: roleTags,
-            color: '#424242' // Grey color for all role chips
+            color: theme.palette.text.secondary // Theme-based color for all role chips
         }];
-    }, [serverData]);
+    }, [serverData, theme.palette.text.secondary]);
 
     // Build weeks sections from the server data (flat structure with grey color)
     const weeksSections = useMemo(() => {
@@ -70,9 +72,9 @@ function SearchTab() {
         return [{
             type: 'נושאים שבועיים',
             items: weekTopics,
-            color: '#424242' // Grey color for all week chips
+            color: theme.palette.text.secondary // Theme-based color for all week chips
         }];
-    }, [serverData]);
+    }, [serverData, theme.palette.text.secondary]);
     
     const [searchObject, setSearchObject] = useState({
         simTopics: [],

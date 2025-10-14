@@ -5,6 +5,7 @@ import Chip from '@mui/material/Chip';
 import Autocomplete from '@mui/material/Autocomplete';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
+import { useTheme } from '@mui/material/styles';
 import TuneIcon from '@mui/icons-material/Tune';
 
 /**
@@ -28,13 +29,14 @@ function ChipSearchBar({
   placeholder = 'חפש...',
   label,
 }) {
+  const theme = useTheme();
     
   // Build unique options and a color map from sections
   const { options, colorMap } = useMemo(() => {
     const map = {};
     if (Array.isArray(sections)) {
       for (const section of sections) {
-        const color = section?.color || '#9e9e9e';
+        const color = section?.color || theme.palette.text.disabled;
         for (const item of section?.items || []) {
           if (!(item in map)) { 
             map[item] = color;
@@ -43,7 +45,7 @@ function ChipSearchBar({
       }
     }
     return { options: Object.keys(map), colorMap: map };
-  }, [sections]);
+  }, [sections, theme.palette.text.disabled]);
 
   const [inputValue, setInputValue] = useState('');
 
@@ -74,10 +76,10 @@ function ChipSearchBar({
                         size="small"
                         variant="outlined"
                         sx={{
-                            bgcolor: `${colorMap[option] || '#e0e0e0'}15`,
-                            color: colorMap[option] || '#e0e0e0',
-                            borderColor: colorMap[option] || '#e0e0e0',
-                            '& .MuiChip-deleteIcon': { color: colorMap[option] || '#e0e0e0' },
+                            bgcolor: `${colorMap[option] || theme.palette.action.disabled}15`,
+                            color: colorMap[option] || theme.palette.action.disabled,
+                            borderColor: colorMap[option] || theme.palette.action.disabled,
+                            '& .MuiChip-deleteIcon': { color: colorMap[option] || theme.palette.action.disabled },
                         }}
                     />
                 ))
@@ -89,12 +91,12 @@ function ChipSearchBar({
                     size="small" 
                     variant="outlined"
                     sx={{ 
-                    bgcolor: `${colorMap[option] || '#e0e0e0'}15`,
-                    color: colorMap[option] || '#e0e0e0',
-                    borderColor: colorMap[option] || '#e0e0e0',
+                    bgcolor: `${colorMap[option] || theme.palette.action.disabled}15`,
+                    color: colorMap[option] || theme.palette.action.disabled,
+                    borderColor: colorMap[option] || theme.palette.action.disabled,
                     margin: '1px',
                     '&:hover': {
-                        bgcolor: `${colorMap[option] || '#e0e0e0'}25`,
+                        bgcolor: `${colorMap[option] || theme.palette.action.disabled}25`,
                     }
                     }} 
                 />

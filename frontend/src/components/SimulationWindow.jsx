@@ -11,6 +11,7 @@ import {
   IconButton,
   Paper
 } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import SimulationWindowChip from './SimulationWindowChip';
 import {
   Close,
@@ -26,17 +27,19 @@ import {
 } from '@mui/icons-material';
 
 function SimulationWindow({ open, onClose, simulation }) {
+  const theme = useTheme();
+  
   if (!simulation) return null;
 
   // Get type color and icon
   const getTypeConfig = (type) => {
     switch (type) {
       case 'מתפרצת':
-        return { color: '#ff9800', icon: LocalFireDepartment };
+        return { color: theme.palette.simulation.explosive, icon: LocalFireDepartment };
       case 'פורמלית':
-        return { color: '#2196f3', icon: MenuBook };
+        return { color: theme.palette.simulation.formal, icon: MenuBook };
       default:
-        return { color: '#9e9e9e', icon: MenuBook };
+        return { color: theme.palette.text.disabled, icon: MenuBook };
     }
   };
 
@@ -44,13 +47,13 @@ function SimulationWindow({ open, onClose, simulation }) {
   const getDifficultyConfig = (difficulty) => {
     switch (difficulty?.toLowerCase()) {
       case 'קלה':
-        return { color: '#4caf50', icon: CheckCircle };
+        return { color: theme.palette.simulation.easy, icon: CheckCircle };
       case 'בינונית':
-        return { color: '#ffc107', icon: Warning };
+        return { color: theme.palette.simulation.medium, icon: Warning };
       case 'קשה':
-        return { color: '#f44336', icon: Error };
+        return { color: theme.palette.simulation.hard, icon: Error };
       default:
-        return { color: '#9e9e9e', icon: CheckCircle };
+        return { color: theme.palette.text.disabled, icon: CheckCircle };
     }
   };
 
