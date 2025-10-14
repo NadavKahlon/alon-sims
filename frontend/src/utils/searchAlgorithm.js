@@ -15,10 +15,7 @@
  * │ Additional week          │   +50 (per match)   │
  * └──────────────────────────┴─────────────────────┘
  * 
- * The simulation is excluded if and only if:
- * 1. Its type or difficulty are not searched for.
- * 2. Some specific characteristic (topic, role, week) is being searched for and the 
- *    simulation is not associated with it at all.
+ * The simulation is excluded if and only if its type or difficulty are not searched for.
  * 
  * @param {Object} sim - Simulation to prioritize.
  * @param {Object} searchObject - Search criteria (see SearchTab.jsx).
@@ -28,28 +25,11 @@
 function prioritizeSimulation(sim, searchObject) {
     let priority = 0;
     
-    // Check exclusion criteria first
-    // 1. Type or difficulty not searched for
+    // Check exclusion criteria
     if (!searchObject.type.includes(sim.type) || !searchObject.difficulty.includes(sim.difficulty)) {
         return -1; // Exclude simulation
     }
     
-    // 2. Check if specific characteristics are being searched for and simulation doesn't have them
-    
-    // Check main topic
-    if (searchObject.simTopics.length > 0 && !searchObject.simTopics.includes(sim.main_sim_topic)) {
-        return -1; // Exclude simulation
-    }
-    
-    // Check main role tag
-    if (searchObject.roleTags.length > 0 && sim.main_role_tag && !searchObject.roleTags.includes(sim.main_role_tag)) {
-        return -1; // Exclude simulation
-    }
-    
-    // Check main week
-    if (searchObject.weeks.length > 0 && sim.main_week && !searchObject.weeks.includes(sim.main_week)) {
-        return -1; // Exclude simulation
-    }
     
     // Calculate priority score based on matches
     
