@@ -4,10 +4,12 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
-import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import Radio from '@mui/material/Radio';
 import Checkbox from '@mui/material/Checkbox';
+import Collapse from '@mui/material/Collapse';
+import Button from '@mui/material/Button';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import SimulationList from './SimulationList';
 import SimulationWindow from './SimulationWindow';
 import ErrorBox from './ErrorBox';
@@ -90,6 +92,7 @@ function SearchTab() {
     const [isTopicWindowOpen, setIsTopicWindowOpen] = useState(false);
     const [isRoleWindowOpen, setIsRoleWindowOpen] = useState(false);
     const [isWeeksWindowOpen, setIsWeeksWindowOpen] = useState(false);
+    const [isAdvancedSearchOpen, setIsAdvancedSearchOpen] = useState(false);
 
     // Callbacks
     const handleCloseSimulation = useCallback(() => {
@@ -127,6 +130,9 @@ function SearchTab() {
     }, []);
     const handleWeeksWindowClose = useCallback(() => {
         setIsWeeksWindowOpen(false);
+    }, []);
+    const handleAdvancedSearchToggle = useCallback(() => {
+        setIsAdvancedSearchOpen(prev => !prev);
     }, []);
 
     if (serverData === null) {
@@ -179,103 +185,137 @@ function SearchTab() {
                                 onAdvanced={handleRoleAdvancedClick}
                             />
                         </Box>
+                        
+                        {/* Advanced Search Section */}
                         <Box sx={{ mb: 2 }}>
-                            <ChipSearchBar
-                                sections={weeksSections}
-                                selected={searchObject.weeks}
-                                label={"נושאים שבועיים"}
-                                onSelectedChange={handleWeeksChange}
-                                onAdvanced={handleWeeksAdvancedClick}
-                            />
+                        <Collapse in={isAdvancedSearchOpen} collapsedSize={0}>
+                            <Box sx={{ 
+                                mb: 2,
+                                mt: 0
+                            }}>
+                                <Box sx={{ mb: 2 }}>
+                                    <ChipSearchBar
+                                        sections={weeksSections}
+                                        selected={searchObject.weeks}
+                                        label={"נושאים שבועיים"}
+                                        onSelectedChange={handleWeeksChange}
+                                        onAdvanced={handleWeeksAdvancedClick}
+                                    />
+                                </Box>
+                                <Box sx={{ mb: 2 }}>
+                                    <FormControl component="fieldset">
+                                        <FormLabel component="legend" sx={{ mb: 1, fontWeight: 700, color: 'primary.main' }}>
+                                            סוג סימולציה
+                                        </FormLabel>
+                                        <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        checked={searchObject.type.includes('מתפרצת')}
+                                                        onChange={(e) => {
+                                                            const newType = e.target.checked
+                                                                ? [...searchObject.type, 'מתפרצת']
+                                                                : searchObject.type.filter(t => t !== 'מתפרצת');
+                                                            handleTypeChange(newType);
+                                                        }}
+                                                    />
+                                                }
+                                                label="מתפרצת"
+                                            />
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        checked={searchObject.type.includes('פורמלית')}
+                                                        onChange={(e) => {
+                                                            const newType = e.target.checked
+                                                                ? [...searchObject.type, 'פורמלית']
+                                                                : searchObject.type.filter(t => t !== 'פורמלית');
+                                                            handleTypeChange(newType);
+                                                        }}
+                                                    />
+                                                }
+                                                label="פורמלית"
+                                            />
+                                        </Box>
+                                    </FormControl>
+                                </Box>
+                                <Box sx={{ mb: 2 }}>
+                                    <FormControl component="fieldset">
+                                        <FormLabel component="legend" sx={{ mb: 1, fontWeight: 700, color: 'primary.main' }}>
+                                            רמת קושי
+                                        </FormLabel>
+                                        <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        checked={searchObject.difficulty.includes('קלה')}
+                                                        onChange={(e) => {
+                                                            const newDifficulty = e.target.checked
+                                                                ? [...searchObject.difficulty, 'קלה']
+                                                                : searchObject.difficulty.filter(d => d !== 'קלה');
+                                                            handleDifficultyChange(newDifficulty);
+                                                        }}
+                                                    />
+                                                }
+                                                label="קלה"
+                                            />
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        checked={searchObject.difficulty.includes('בינונית')}
+                                                        onChange={(e) => {
+                                                            const newDifficulty = e.target.checked
+                                                                ? [...searchObject.difficulty, 'בינונית']
+                                                                : searchObject.difficulty.filter(d => d !== 'בינונית');
+                                                            handleDifficultyChange(newDifficulty);
+                                                        }}
+                                                    />
+                                                }
+                                                label="בינונית"
+                                            />
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        checked={searchObject.difficulty.includes('קשה')}
+                                                        onChange={(e) => {
+                                                            const newDifficulty = e.target.checked
+                                                                ? [...searchObject.difficulty, 'קשה']
+                                                                : searchObject.difficulty.filter(d => d !== 'קשה');
+                                                            handleDifficultyChange(newDifficulty);
+                                                        }}
+                                                    />
+                                                }
+                                                label="קשה"
+                                            />
+                                        </Box>
+                                    </FormControl>
+                                </Box>
+                            </Box>
+                        </Collapse>
+                        
+                        <Button
+                            onClick={handleAdvancedSearchToggle}
+                            endIcon={isAdvancedSearchOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                            sx={{
+                                textTransform: 'none',
+                                fontWeight: 400,
+                                color: 'text.secondary',
+                                p: 1,
+                                minWidth: 'auto',
+                                justifyContent: 'flex-start',
+                                width: '100%',
+                                border: '1px solid',
+                                borderColor: 'divider',
+                                borderRadius: 2,
+                                backgroundColor: 'background.paper',
+                                '&:hover': {
+                                    backgroundColor: 'action.hover'
+                                }
+                            }}
+                        >
+                            {isAdvancedSearchOpen ? 'סגור חיפוש מתקדם' : 'חיפוש מתקדם'}
+                        </Button>
                         </Box>
-                    </Box>
-                    <Box sx={{ mb: 2 }}>
-                        <FormControl component="fieldset">
-                            <FormLabel component="legend" sx={{ mb: 1, fontWeight: 700, color: 'primary.main' }}>
-                                סוג סימולציה
-                            </FormLabel>
-                            <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
-                                <FormControlLabel
-                                    control={
-                                        <Checkbox
-                                            checked={searchObject.type.includes('מתפרצת')}
-                                            onChange={(e) => {
-                                                const newType = e.target.checked
-                                                    ? [...searchObject.type, 'מתפרצת']
-                                                    : searchObject.type.filter(t => t !== 'מתפרצת');
-                                                handleTypeChange(newType);
-                                            }}
-                                        />
-                                    }
-                                    label="מתפרצת"
-                                />
-                                <FormControlLabel
-                                    control={
-                                        <Checkbox
-                                            checked={searchObject.type.includes('פורמלית')}
-                                            onChange={(e) => {
-                                                const newType = e.target.checked
-                                                    ? [...searchObject.type, 'פורמלית']
-                                                    : searchObject.type.filter(t => t !== 'פורמלית');
-                                                handleTypeChange(newType);
-                                            }}
-                                        />
-                                    }
-                                    label="פורמלית"
-                                />
-                            </Box>
-                        </FormControl>
-                    </Box>
-                    <Box sx={{ mb: 2 }}>
-                        <FormControl component="fieldset">
-                            <FormLabel component="legend" sx={{ mb: 1, fontWeight: 700, color: 'primary.main' }}>
-                                רמת קושי
-                            </FormLabel>
-                            <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
-                                <FormControlLabel
-                                    control={
-                                        <Checkbox
-                                            checked={searchObject.difficulty.includes('קלה')}
-                                            onChange={(e) => {
-                                                const newDifficulty = e.target.checked
-                                                    ? [...searchObject.difficulty, 'קלה']
-                                                    : searchObject.difficulty.filter(d => d !== 'קלה');
-                                                handleDifficultyChange(newDifficulty);
-                                            }}
-                                        />
-                                    }
-                                    label="קלה"
-                                />
-                                <FormControlLabel
-                                    control={
-                                        <Checkbox
-                                            checked={searchObject.difficulty.includes('בינונית')}
-                                            onChange={(e) => {
-                                                const newDifficulty = e.target.checked
-                                                    ? [...searchObject.difficulty, 'בינונית']
-                                                    : searchObject.difficulty.filter(d => d !== 'בינונית');
-                                                handleDifficultyChange(newDifficulty);
-                                            }}
-                                        />
-                                    }
-                                    label="בינונית"
-                                />
-                                <FormControlLabel
-                                    control={
-                                        <Checkbox
-                                            checked={searchObject.difficulty.includes('קשה')}
-                                            onChange={(e) => {
-                                                const newDifficulty = e.target.checked
-                                                    ? [...searchObject.difficulty, 'קשה']
-                                                    : searchObject.difficulty.filter(d => d !== 'קשה');
-                                                handleDifficultyChange(newDifficulty);
-                                            }}
-                                        />
-                                    }
-                                    label="קשה"
-                                />
-                            </Box>
-                        </FormControl>
                     </Box>
                     <SimulationList 
                         simulations={displayedSims}
