@@ -44,17 +44,23 @@ def list_simulations(request):
 
 
 def list_simulation_topics(request):
-    topic_types = SimulationTopicType.objects.all().order_by("name")
-    data = {}
+    topic_types = SimulationTopicType.objects.all().order_by("serial_num", "name")
+    result = []
     for topic_type in topic_types:
         topics = (
             SimulationTopic.objects.filter(type=topic_type)
             .order_by("name")
             .values_list("name", flat=True)
         )
-        data[topic_type.name] = list(topics)
+        result.append(
+            {
+                "topicType": topic_type.name,
+                "topics": list(topics),
+                "color": topic_type.color,
+            }
+        )
 
-    return JsonResponse(data)
+    return JsonResponse(result, safe=False)
 
 
 def list_role_tags(request):

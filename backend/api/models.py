@@ -34,6 +34,8 @@ class SimulationTopicType(models.Model):
     """A classification for topic tags."""
 
     name = models.CharField("סוג", max_length=80, unique=True)
+    color = models.CharField("צבע", max_length=20, default="#9e9e9e")
+    serial_num = models.IntegerField("מספר סודר", default=0)
 
     class Meta:
         verbose_name = "סוג נושא סימולציה"
