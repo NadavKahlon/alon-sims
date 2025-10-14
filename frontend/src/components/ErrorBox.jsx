@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -11,6 +11,10 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
 function ErrorBox({ error }) {
     const [showDetails, setShowDetails] = useState(false);
+
+    const handleToggleDetails = useCallback(() => {
+        setShowDetails(prev => !prev);
+    }, []);
 
     return (
         <Box sx={{ 
@@ -49,7 +53,7 @@ function ErrorBox({ error }) {
                     <Button
                         variant="contained"
                         color="error"
-                        onClick={() => setShowDetails(!showDetails)}
+                        onClick={handleToggleDetails}
                         endIcon={showDetails ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                         sx={{ mb: 2, gap: 1, pl: 0 }}
                     >

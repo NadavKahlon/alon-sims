@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import { LocalFireDepartment, MenuBook, CheckCircle, Warning, Error, Help, Person, CalendarToday } from '@mui/icons-material';
 
 function SimulationListEntry({ simulation, onClick }) {
+
+  const handleClick = useCallback(() => {
+    onClick(simulation);
+  }, [onClick, simulation]);
 
   // Get type color and icon
   const getTypeConfig = (type) => {
@@ -38,7 +42,7 @@ function SimulationListEntry({ simulation, onClick }) {
   return (
     <Paper 
       elevation={2} 
-      onClick={onClick}
+      onClick={handleClick}
       sx={{ 
         p: { xs: 1.5, md: 3 }, 
         mb: { xs: 1.5, md: 2.5 }, 
