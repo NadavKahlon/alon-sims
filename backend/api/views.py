@@ -1,4 +1,5 @@
 from django.http import JsonResponse
+import json
 from .models import Simulation, SimulationTopicType, SimulationTopic, RoleTag, WeekTopic
 
 
@@ -22,6 +23,7 @@ def list_simulations(request):
         data.append(
             {
                 "id": sim.id,
+                "title": str(sim),
                 "url": sim.url,
                 "main_sim_topic": sim.main_sim_topic.name,
                 "main_role_tag": sim.main_role_tag.name if sim.main_role_tag else None,
@@ -42,17 +44,23 @@ def list_simulations(request):
 
 
 def list_simulation_topics(request):
-    topic_types = SimulationTopicType.objects.all().order_by("name")
-    data = {}
+    topic_types = SimulationTopicType.objects.all().order_by("serial_num", "name")
+    result = []
     for topic_type in topic_types:
         topics = (
             SimulationTopic.objects.filter(type=topic_type)
             .order_by("name")
             .values_list("name", flat=True)
         )
-        data[topic_type.name] = list(topics)
+        result.append(
+            {
+                "topicType": topic_type.name,
+                "topics": list(topics),
+                "color": topic_type.color,
+            }
+        )
 
-    return JsonResponse(data)
+    return JsonResponse(result, safe=False)
 
 
 def list_role_tags(request):
@@ -67,3 +75,19 @@ def list_week_topics(request):
         .values_list("topic", flat=True)
     )
     return JsonResponse(topics, safe=False)
+
+
+def list_all(request):
+    simulations_resp = list_simulations(request)
+    simulation_topics_resp = list_simulation_topics(request)
+    role_tags_resp = list_role_tags(request)
+    week_topics_resp = list_week_topics(request)
+
+    data = {
+        "simulations": json.loads(simulations_resp.content),
+        "simulation_topics": json.loads(simulation_topics_resp.content),
+        "role_tags": json.loads(role_tags_resp.content),
+        "week_topics": json.loads(week_topics_resp.content),
+    }
+
+    return JsonResponse(data)
