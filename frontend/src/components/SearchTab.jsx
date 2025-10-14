@@ -55,6 +55,16 @@ function SearchTab() {
             color: '#424242' // Grey color for all role chips
         }];
     }, [serverData]);
+
+    // Build weeks sections from the server data (flat structure with grey color)
+    const weeksSections = useMemo(() => {
+        const weekTopics = serverData?.week_topics ?? [];
+        return [{
+            type: 'נושאים שבועיים',
+            items: weekTopics,
+            color: '#424242' // Grey color for all week chips
+        }];
+    }, [serverData]);
     
     const [searchObject, setSearchObject] = useState({
         simTopics: [],
@@ -73,6 +83,7 @@ function SearchTab() {
     const [openedSimulation, setOpenedSimulation] = useState(null);
     const [isTopicWindowOpen, setIsTopicWindowOpen] = useState(false);
     const [isRoleWindowOpen, setIsRoleWindowOpen] = useState(false);
+    const [isWeeksWindowOpen, setIsWeeksWindowOpen] = useState(false);
 
     // Callbacks
     const handleCloseSimulation = useCallback(() => {
@@ -84,17 +95,26 @@ function SearchTab() {
     const handleRoleTagsChange = useCallback((sel) => {
         setSearchObject((prev) => ({ ...prev, roleTags: sel }));
     }, []);
+    const handleWeeksChange = useCallback((sel) => {
+        setSearchObject((prev) => ({ ...prev, weeks: sel }));
+    }, []);
     const handleAdvancedClick = useCallback(() => {
         setIsTopicWindowOpen(true);
     }, []);
     const handleRoleAdvancedClick = useCallback(() => {
         setIsRoleWindowOpen(true);
     }, []);
+    const handleWeeksAdvancedClick = useCallback(() => {
+        setIsWeeksWindowOpen(true);
+    }, []);
     const handleTopicWindowClose = useCallback(() => {
         setIsTopicWindowOpen(false);
     }, []);
     const handleRoleWindowClose = useCallback(() => {
         setIsRoleWindowOpen(false);
+    }, []);
+    const handleWeeksWindowClose = useCallback(() => {
+        setIsWeeksWindowOpen(false);
     }, []);
 
     if (serverData === null) {
@@ -143,6 +163,15 @@ function SearchTab() {
                             onAdvanced={handleRoleAdvancedClick}
                         />
                     </Box>
+                    <Box sx={{ mb: 2 }}>
+                        <ChipSearchBar
+                            sections={weeksSections}
+                            selected={searchObject.weeks}
+                            label={"נושאים שבועיים"}
+                            onSelectedChange={handleWeeksChange}
+                            onAdvanced={handleWeeksAdvancedClick}
+                        />
+                    </Box>
                     <SimulationList 
                         simulations={displayedSims}
                         onSimulationClick={setOpenedSimulation}
@@ -166,6 +195,16 @@ function SearchTab() {
                 initialSelected={searchObject.roleTags}
                 onSelectedChange={handleRoleTagsChange}
                 onClose={handleRoleWindowClose}
+                flat={true}
+            />
+
+            <ChipSelectWindow
+                open={isWeeksWindowOpen}
+                header={"נושאים שבועיים"}
+                sections={weeksSections}
+                initialSelected={searchObject.weeks}
+                onSelectedChange={handleWeeksChange}
+                onClose={handleWeeksWindowClose}
                 flat={true}
             />
 
