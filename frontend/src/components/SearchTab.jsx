@@ -302,7 +302,7 @@ function SearchTab() {
                                 color: 'text.secondary',
                                 p: 1,
                                 minWidth: 'auto',
-                                justifyContent: 'flex-start',
+                                justifyContent: 'space-between',
                                 width: '100%',
                                 border: '1px solid',
                                 borderColor: 'divider',
@@ -313,7 +313,7 @@ function SearchTab() {
                                 }
                             }}
                         >
-                            {isAdvancedSearchOpen ? 'סגור חיפוש מתקדם' : 'חיפוש מתקדם'}
+                            {isAdvancedSearchOpen ? 'סגור חיפוש מתקדם' : 'חיפוש מתקדם...'}
                         </Button>
                         </Box>
                     </Box>
