@@ -35,9 +35,9 @@ function SimulationWindow({ open, onClose, simulation }) {
   const getTypeConfig = (type) => {
     switch (type) {
       case 'מתפרצת':
-        return { color: theme.palette.simulation.explosive, icon: LocalFireDepartment };
+        return { color: theme.palette.simulation.type.explosive, icon: LocalFireDepartment };
       case 'פורמלית':
-        return { color: theme.palette.simulation.formal, icon: MenuBook };
+        return { color: theme.palette.simulation.type.formal, icon: MenuBook };
       default:
         return { color: theme.palette.text.disabled, icon: MenuBook };
     }
@@ -47,11 +47,11 @@ function SimulationWindow({ open, onClose, simulation }) {
   const getDifficultyConfig = (difficulty) => {
     switch (difficulty?.toLowerCase()) {
       case 'קלה':
-        return { color: theme.palette.simulation.easy, icon: CheckCircle };
+        return { color: theme.palette.simulation.difficulty.easy, icon: CheckCircle };
       case 'בינונית':
-        return { color: theme.palette.simulation.medium, icon: Warning };
+        return { color: theme.palette.simulation.difficulty.medium, icon: Warning };
       case 'קשה':
-        return { color: theme.palette.simulation.hard, icon: Error };
+        return { color: theme.palette.simulation.difficulty.hard, icon: Error };
       default:
         return { color: theme.palette.text.disabled, icon: CheckCircle };
     }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { ThemeProvider } from '@mui/material/styles';
-import { CssBaseline, AppBar, Toolbar, Typography, Box } from '@mui/material';
+import { CssBaseline, AppBar, Toolbar, Box } from '@mui/material';
 import { CacheProvider } from '@emotion/react';
 import createCache from '@emotion/cache';
 import stylisPluginRtl from 'stylis-plugin-rtl';
@@ -17,10 +17,19 @@ function App() {
         <CssBaseline />
         <div className="App" dir="rtl">
           <AppBar position="static" sx={{ backgroundColor: 'primary.main' }}>
-            <Toolbar>
-              <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 'bold' }}>
-                ארכיון סימולציות אלון
-              </Typography>
+            <Toolbar sx={{ justifyContent: 'center', py: 2 }}>
+              {/* Logo only */}
+              <Box 
+                component="img"
+                src="/logo.png" 
+                alt="Logo" 
+                sx={{ 
+                  height: { xs: 50, sm: 55, md: 80, lg: 90 },
+                  width: 'auto',
+                  maxWidth: '100%',
+                  objectFit: 'contain'
+                }}
+              />
             </Toolbar>
           </AppBar>
           <Box sx={{ flexGrow: 1, p: 2 }}>

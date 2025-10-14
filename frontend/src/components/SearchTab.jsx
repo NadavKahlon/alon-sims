@@ -309,7 +309,7 @@ function SearchTab() {
                                 border: '1px solid',
                                 borderColor: 'divider',
                                 borderRadius: 2,
-                                backgroundColor: 'background.paper',
+                                backgroundColor: 'background.default',
                                 '&:hover': {
                                     backgroundColor: 'action.hover'
                                 }
@@ -359,6 +359,7 @@ function SearchTab() {
                 open={openedSimulation !== null}
                 onClose={handleCloseSimulation}
                 simulation={openedSimulation}
+                serverData={serverData}
             />
         </>
     );

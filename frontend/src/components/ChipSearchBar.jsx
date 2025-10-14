@@ -137,7 +137,7 @@ function ChipSearchBar({
                         top: '50%',
                         transform: 'translateY(-50%)',
                         zIndex: 1,
-                        bgcolor: 'background.paper',
+                        bgcolor: 'background.default',
                         '&:hover': {
                         bgcolor: 'action.hover',
                         }

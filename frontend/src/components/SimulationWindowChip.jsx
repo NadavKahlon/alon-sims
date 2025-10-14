@@ -10,7 +10,8 @@ function SimulationWindowChip({ label, variant = "outlined", size = "small" }) {
       sx={{ 
         fontSize: { xs: '0.8rem', md: '1rem' },
         padding: { xs: '1px 2px', md: '4px 8px' },
-        minHeight: { xs: '24px', md: '32px' }
+        minHeight: { xs: '24px', md: '32px' },
+        color: 'text.secondary'
       }}
     />
   );
