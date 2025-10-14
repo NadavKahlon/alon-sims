@@ -1,14 +1,17 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
-import SimulationListEntry from './SimulationListEntry';
+import SimulationList from './SimulationList';
 import SimulationWindow from './SimulationWindow';
 import ErrorBox from './ErrorBox';
 import { searchSimulations } from '../utils/searchAlgorithm';
+import ChipSearchBar from './ChipSearchBar';
+import ChipSelectWindow from './ChipSelectWindow';
 
 function SearchTab() {
-    // Hooks related to the low level state
+
+    // Getting data from the server
     const [serverData, setServerData] = useState(null);
     const [error, setError] = useState(null);
     useEffect(() => {
@@ -32,19 +35,17 @@ function SearchTab() {
         loadAll();
         return () => abortController.abort();
     }, []);
-    
-    // Data related to the opened simulation window
-    const [selectedSimulation, setSelectedSimulation] = useState(null);
-    const [isWindowOpen, setIsWindowOpen] = useState(false);
 
-    // Hooks related to the searching process
-    const allSims = useMemo(
-        () => 
-            serverData === null? null :
-            !('simulations' in serverData)? [] :
-            serverData.simulations,
+    // Build simulation topic sections from the server data
+    const topicSections = useMemo(() =>
+        (serverData?.simulation_topics ?? []).map((s) => ({
+            type: s.topicType,
+            items: s.topics,
+            color: s.color
+        })),
         [serverData]
     );
+    
     const [searchObject, setSearchObject] = useState({
         simTopics: [],
         roleTags: [],
@@ -53,51 +54,35 @@ function SearchTab() {
         type: null,
     });
     const [displayedSims, setDisplayedSims] = useState([]);
-    const [isSearching, setIsSearching] = useState(true);
+
     useEffect(() => {
-        // Server data hasn't arrived yet - skip searching and keep UI governed by serverData === null
-        if (allSims === null) {
-            return;
-        }
-        let isCancelled = false;
-        setIsSearching(true);
-        // Defer heavy computation to allow spinner to render first
-        const handle = setTimeout(() => {
-            if (isCancelled) return;
-            const result = searchSimulations(allSims, searchObject);
-            if (!isCancelled) {
-                setDisplayedSims(result);
-                setIsSearching(false);
-            }
-        }, 0);
-        return () => {
-            isCancelled = true;
-            clearTimeout(handle);
-        };
-    }, [searchObject, allSims]);
+        setDisplayedSims(searchSimulations(serverData?.simulations ?? [], searchObject));
+    }, [serverData, searchObject]);
 
-    // Data used to guide searching
-    const sim_topics = useMemo(() => serverData?.simulation_topics ?? [], [serverData]);
-    const role_tags = useMemo(() => serverData?.role_tags ?? [], [serverData]);
-    const week_topics = useMemo(() => serverData?.week_topics ?? [], [serverData]);
+    // Toggles for open windows
+    const [openedSimulation, setOpenedSimulation] = useState(null);
+    const [isTopicWindowOpen, setIsTopicWindowOpen] = useState(false);
 
-    const handleSimulationClick = (simulation) => {
-        setSelectedSimulation(simulation);
-        setIsWindowOpen(true);
-    };
+    // Callbacks
+    const handleCloseSimulation = useCallback(() => {
+        setOpenedSimulation(null);
+    }, []);
+    const handleSimTopicsChange = useCallback((sel) => {
+        setSearchObject((prev) => ({ ...prev, simTopics: sel }));
+    }, []);
+    const handleAdvancedClick = useCallback(() => {
+        setIsTopicWindowOpen(true);
+    }, []);
+    const handleTopicWindowClose = useCallback(() => {
+        setIsTopicWindowOpen(false);
+    }, []);
 
-    const handleCloseWindow = () => {
-        setIsWindowOpen(false);
-        setSelectedSimulation(null);
-    };
-
-    if (serverData === null || isSearching) {
-        const waitingForServer = serverData === null;
+    if (serverData === null) {
         return (
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100vh', gap: 2 }}>
                 <CircularProgress size={48} />
                 <Typography variant="body2" color="text.secondary">
-                    {waitingForServer ? 'טוען נתונים מהשרת…' : 'מחפש סימולציות…'}
+                    טוען נתונים מהשרת…
                 </Typography>
             </Box>
         );
@@ -120,28 +105,35 @@ function SearchTab() {
                     maxWidth: 800,
                     minWidth: 300
                 }}>
-                    {displayedSims.length === 0 ? (
-                        <Typography variant="body1" color="text.secondary">
-                            לא נמצאו סימולציות מתאימות.
-                        </Typography>
-                    ) : (
-                        <Box>
-                            {displayedSims.map((simulation, index) => (
-                                <SimulationListEntry 
-                                    key={simulation.id || index} 
-                                    simulation={simulation}
-                                    onClick={() => handleSimulationClick(simulation)}
-                                />
-                            ))}
-                        </Box>
-                    )}
+                    <Box sx={{ mb: 2 }}>
+                        <ChipSearchBar
+                            sections={topicSections}
+                            selected={searchObject.simTopics}
+                            label={"נושאי הסימולציה"}
+                            onSelectedChange={handleSimTopicsChange}
+                            onAdvanced={handleAdvancedClick}
+                        />
+                    </Box>
+                    <SimulationList 
+                        simulations={displayedSims}
+                        onSimulationClick={setOpenedSimulation}
+                    />
                 </Box>
             </Box>
             
+            <ChipSelectWindow
+                open={isTopicWindowOpen}
+                header={"בחר נושאי סימולציה"}
+                sections={topicSections}
+                initialSelected={searchObject.simTopics}
+                onSelectedChange={handleSimTopicsChange}
+                onClose={handleTopicWindowClose}
+            />
+
             <SimulationWindow 
-                open={isWindowOpen}
-                onClose={handleCloseWindow}
-                simulation={selectedSimulation}
+                open={openedSimulation !== null}
+                onClose={handleCloseSimulation}
+                simulation={openedSimulation}
             />
         </>
     );
