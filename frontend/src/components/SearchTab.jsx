@@ -2,6 +2,12 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Radio from '@mui/material/Radio';
+import Checkbox from '@mui/material/Checkbox';
 import SimulationList from './SimulationList';
 import SimulationWindow from './SimulationWindow';
 import ErrorBox from './ErrorBox';
@@ -70,8 +76,8 @@ function SearchTab() {
         simTopics: [],
         roleTags: [],
         weeks: [],
-        difficulty: null,
-        type: null,
+        difficulty: ['קלה', 'בינונית', 'קשה'],
+        type: ['מתפרצת', 'פורמלית'],
     });
     const [displayedSims, setDisplayedSims] = useState([]);
 
@@ -97,6 +103,12 @@ function SearchTab() {
     }, []);
     const handleWeeksChange = useCallback((sel) => {
         setSearchObject((prev) => ({ ...prev, weeks: sel }));
+    }, []);
+    const handleTypeChange = useCallback((type) => {
+        setSearchObject((prev) => ({ ...prev, type }));
+    }, []);
+    const handleDifficultyChange = useCallback((difficulty) => {
+        setSearchObject((prev) => ({ ...prev, difficulty }));
     }, []);
     const handleAdvancedClick = useCallback(() => {
         setIsTopicWindowOpen(true);
@@ -145,32 +157,125 @@ function SearchTab() {
                     maxWidth: 800,
                     minWidth: 300
                 }}>
-                    <Box sx={{ mb: 2 }}>
-                        <ChipSearchBar
-                            sections={topicSections}
-                            selected={searchObject.simTopics}
-                            label={"נושאי הסימולציה"}
-                            onSelectedChange={handleSimTopicsChange}
-                            onAdvanced={handleAdvancedClick}
-                        />
+                    <Box sx={{ mb: 3 }}>
+                        <FormLabel component="legend" sx={{ mb: 2, fontWeight: 700, fontSize: '1.1rem', color: 'primary.main' }}>
+                            מאפייני התאמה
+                        </FormLabel>
+                        <Box sx={{ mb: 2 }}>
+                            <ChipSearchBar
+                                sections={topicSections}
+                                selected={searchObject.simTopics}
+                                label={"נושאי הסימולציה"}
+                                onSelectedChange={handleSimTopicsChange}
+                                onAdvanced={handleAdvancedClick}
+                            />
+                        </Box>
+                        <Box sx={{ mb: 2 }}>
+                            <ChipSearchBar
+                                sections={roleSections}
+                                selected={searchObject.roleTags}
+                                label={"מסלולים ועיסוקים"}
+                                onSelectedChange={handleRoleTagsChange}
+                                onAdvanced={handleRoleAdvancedClick}
+                            />
+                        </Box>
+                        <Box sx={{ mb: 2 }}>
+                            <ChipSearchBar
+                                sections={weeksSections}
+                                selected={searchObject.weeks}
+                                label={"נושאים שבועיים"}
+                                onSelectedChange={handleWeeksChange}
+                                onAdvanced={handleWeeksAdvancedClick}
+                            />
+                        </Box>
                     </Box>
                     <Box sx={{ mb: 2 }}>
-                        <ChipSearchBar
-                            sections={roleSections}
-                            selected={searchObject.roleTags}
-                            label={"מסלולים ועיסוקים"}
-                            onSelectedChange={handleRoleTagsChange}
-                            onAdvanced={handleRoleAdvancedClick}
-                        />
+                        <FormControl component="fieldset">
+                            <FormLabel component="legend" sx={{ mb: 1, fontWeight: 700, color: 'primary.main' }}>
+                                סוג סימולציה
+                            </FormLabel>
+                            <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={searchObject.type.includes('מתפרצת')}
+                                            onChange={(e) => {
+                                                const newType = e.target.checked
+                                                    ? [...searchObject.type, 'מתפרצת']
+                                                    : searchObject.type.filter(t => t !== 'מתפרצת');
+                                                handleTypeChange(newType);
+                                            }}
+                                        />
+                                    }
+                                    label="מתפרצת"
+                                />
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={searchObject.type.includes('פורמלית')}
+                                            onChange={(e) => {
+                                                const newType = e.target.checked
+                                                    ? [...searchObject.type, 'פורמלית']
+                                                    : searchObject.type.filter(t => t !== 'פורמלית');
+                                                handleTypeChange(newType);
+                                            }}
+                                        />
+                                    }
+                                    label="פורמלית"
+                                />
+                            </Box>
+                        </FormControl>
                     </Box>
                     <Box sx={{ mb: 2 }}>
-                        <ChipSearchBar
-                            sections={weeksSections}
-                            selected={searchObject.weeks}
-                            label={"נושאים שבועיים"}
-                            onSelectedChange={handleWeeksChange}
-                            onAdvanced={handleWeeksAdvancedClick}
-                        />
+                        <FormControl component="fieldset">
+                            <FormLabel component="legend" sx={{ mb: 1, fontWeight: 700, color: 'primary.main' }}>
+                                רמת קושי
+                            </FormLabel>
+                            <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={searchObject.difficulty.includes('קלה')}
+                                            onChange={(e) => {
+                                                const newDifficulty = e.target.checked
+                                                    ? [...searchObject.difficulty, 'קלה']
+                                                    : searchObject.difficulty.filter(d => d !== 'קלה');
+                                                handleDifficultyChange(newDifficulty);
+                                            }}
+                                        />
+                                    }
+                                    label="קלה"
+                                />
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={searchObject.difficulty.includes('בינונית')}
+                                            onChange={(e) => {
+                                                const newDifficulty = e.target.checked
+                                                    ? [...searchObject.difficulty, 'בינונית']
+                                                    : searchObject.difficulty.filter(d => d !== 'בינונית');
+                                                handleDifficultyChange(newDifficulty);
+                                            }}
+                                        />
+                                    }
+                                    label="בינונית"
+                                />
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={searchObject.difficulty.includes('קשה')}
+                                            onChange={(e) => {
+                                                const newDifficulty = e.target.checked
+                                                    ? [...searchObject.difficulty, 'קשה']
+                                                    : searchObject.difficulty.filter(d => d !== 'קשה');
+                                                handleDifficultyChange(newDifficulty);
+                                            }}
+                                        />
+                                    }
+                                    label="קשה"
+                                />
+                            </Box>
+                        </FormControl>
                     </Box>
                     <SimulationList 
                         simulations={displayedSims}
