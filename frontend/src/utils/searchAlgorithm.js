@@ -7,12 +7,9 @@
  * ┌────────────────────────────────────────────────┐
  * │ Condition                │    Points           │
  * ├──────────────────────────┼─────────────────────┤
- * │ Main topic               │   +1000             │
- * │ Additional topic         │   +50 (per match)   │
- * │ Main role tag            │   +1000             │
- * │ Additional role tag      │   +100 (per match)  │
- * │ Main week                │   +500              │
- * │ Additional week          │   +50 (per match)   │
+ * │ Simulation topic         │   +1 (per match)    │
+ * │ Week topic               │   +2                │
+ * │ Role                     │   +2                │
  * └──────────────────────────┴─────────────────────┘
  * 
  * The simulation is excluded if and only if its type or difficulty are not searched for.
@@ -30,41 +27,32 @@ function prioritizeSimulation(sim, searchObject) {
         return -1; // Exclude simulation
     }
     
-    
     // Calculate priority score based on matches
     
-    // Main topic match
-    if (searchObject.simTopics.includes(sim.main_sim_topic)) {
-        priority += 1000;
-    }
-    
-    // Additional topics matches
-    const additionalTopicMatches = sim.additional_sim_topics.filter(topic => 
+    // Simulation topics matches (1 point each)
+    const topicMatches = sim.simulation_topics.filter(topic => 
         searchObject.simTopics.includes(topic)
     ).length;
-    priority += additionalTopicMatches * 50;
+    priority += topicMatches * 1;
     
-    // Main role tag match
-    if (sim.main_role_tag && searchObject.roleTags.includes(sim.main_role_tag)) {
-        priority += 1000;
+    // Week topic match (2 points)
+    if (sim.week_topic && searchObject.weeks.includes(sim.week_topic)) {
+        priority += 2;
     }
     
-    // Additional role tags matches
-    const additionalRoleMatches = sim.additional_role_tags.filter(role => 
-        searchObject.roleTags.includes(role)
-    ).length;
-    priority += additionalRoleMatches * 100;
-    
-    // Main week match
-    if (sim.main_week && searchObject.weeks.includes(sim.main_week)) {
-        priority += 500;
+    // Role match (2 points)
+    if (sim.role && searchObject.roleTags.includes(sim.role)) {
+        priority += 2;
     }
     
-    // Additional weeks matches
-    const additionalWeekMatches = sim.additional_weeks.filter(week => 
-        searchObject.weeks.includes(week)
-    ).length;
-    priority += additionalWeekMatches * 50;
+    // Only exclude simulations with no matches if there are actually search criteria
+    const hasSearchCriteria = searchObject.simTopics.length > 0 || 
+                             searchObject.weeks.length > 0 || 
+                             searchObject.roleTags.length > 0;
+    
+    if (hasSearchCriteria && priority === 0) {
+        return -1; // Exclude simulation
+    }
     
     return priority;
 }

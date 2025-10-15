@@ -8,12 +8,13 @@ import SimulationListEntry from './SimulationListEntry';
  * Props:
  * - simulations: Array of simulation objects to display
  * - onSimulationClick: (simulation) => void, called when a simulation is clicked
- * - isSearching: boolean, whether a search is in progress
+ * - searchCriteria: Object containing search criteria for filtering chips
  * - emptyMessage?: string, message to show when no simulations (default: "לא נמצאו סימולציות מתאימות")
  */
 function SimulationList({ 
     simulations = [], 
     onSimulationClick, 
+    searchCriteria,
     emptyMessage = "לא נמצאו סימולציות מתאימות."
 }) {
 
@@ -34,6 +35,7 @@ function SimulationList({
                     key={simulation.id || index} 
                     simulation={simulation}
                     onClick={onSimulationClick}
+                    searchCriteria={searchCriteria}
                 />
             ))}
         </Box>
