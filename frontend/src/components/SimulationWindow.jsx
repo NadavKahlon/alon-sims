@@ -137,6 +137,17 @@ function SimulationWindow({ open, onClose, simulation }) {
 
           <Divider />
 
+          {/* Author Section */}
+          <Box>
+            <Typography variant="subtitle1" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: { xs: '1rem', md: '1.4rem' }, fontWeight: 'bold' }}>
+              <Person sx={{ fontSize: { xs: 18, md: 26 } }} />
+              מחבר הסימולציה
+            </Typography>
+            <Typography variant="body1" sx={{ fontSize: { xs: '0.9rem', md: '1.1rem' }, fontWeight: 'medium' }}>
+              {simulation.author || 'לא מוגדר'}
+            </Typography>
+          </Box>
+
           {/* Topics Section */}
           <Box>
             <Typography variant="subtitle1" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: { xs: '1rem', md: '1.4rem' }, fontWeight: 'bold' }}>
@@ -145,19 +156,14 @@ function SimulationWindow({ open, onClose, simulation }) {
             </Typography>
             
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              {/* All Topics Combined */}
               <Box>
                 <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                  {/* Main topic first */}
-                  {simulation.main_sim_topic && (
-                    <SimulationWindowChip label={simulation.main_sim_topic} />
-                  )}
-                  {/* Additional topics */}
-                  {simulation.additional_sim_topics && simulation.additional_sim_topics.map((topic, index) => (
+                  {/* Simulation topics */}
+                  {simulation.simulation_topics && simulation.simulation_topics.map((topic, index) => (
                     <SimulationWindowChip key={index} label={topic} />
                   ))}
                   {/* Show generic message if no topics */}
-                  {!simulation.main_sim_topic && (!simulation.additional_sim_topics || simulation.additional_sim_topics.length === 0) && (
+                  {(!simulation.simulation_topics || simulation.simulation_topics.length === 0) && (
                     <Typography variant="body2" sx={{ color: 'text.secondary', fontStyle: 'italic', fontSize: { xs: '0.85rem', md: '1rem' } }}>
                       לסימולציה זו לא משוייכים נושאים
                     </Typography>
@@ -167,27 +173,22 @@ function SimulationWindow({ open, onClose, simulation }) {
             </Box>
           </Box>
 
-          {/* Roles Section */}
+          {/* Role Section */}
           <Box>
             <Typography variant="subtitle1" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: { xs: '1rem', md: '1.4rem' }, fontWeight: 'bold' }}>
               <Person sx={{ fontSize: { xs: 18, md: 26 } }} />
-              מסלולים ועיסוקים רלוונטיים
+              תפקיד רלוונטי
             </Typography>
             
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              {/* All Roles Combined */}
               <Box>
                 <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                  {/* Main role first */}
-                  {simulation.main_role_tag && (
-                    <SimulationWindowChip label={simulation.main_role_tag} />
+                  {/* Single role */}
+                  {simulation.role && (
+                    <SimulationWindowChip label={simulation.role} />
                   )}
-                  {/* Additional roles */}
-                  {simulation.additional_role_tags && simulation.additional_role_tags.map((role, index) => (
-                    <SimulationWindowChip key={index} label={role} />
-                  ))}
-                  {/* Show generic message if no roles */}
-                  {!simulation.main_role_tag && (!simulation.additional_role_tags || simulation.additional_role_tags.length === 0) && (
+                  {/* Show generic message if no role */}
+                  {!simulation.role && (
                     <Typography variant="body2" sx={{ color: 'text.secondary', fontStyle: 'italic', fontSize: { xs: '0.85rem', md: '1rem' } }}>
                       סימולציה זו מתאימה לכל תפקיד.
                     </Typography>
@@ -201,23 +202,18 @@ function SimulationWindow({ open, onClose, simulation }) {
           <Box>
             <Typography variant="subtitle1" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: { xs: '1rem', md: '1.4rem' }, fontWeight: 'bold' }}>
               <CalendarToday sx={{ fontSize: { xs: 18, md: 26 } }} />
-              שבועות מתאימים
+              שבוע מתאים
             </Typography>
             
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              {/* All Weeks Combined */}
               <Box>
                 <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                  {/* Main week first */}
-                  {simulation.main_week && (
-                    <SimulationWindowChip label={simulation.main_week} />
+                  {/* Single week */}
+                  {simulation.week_topic && (
+                    <SimulationWindowChip label={simulation.week_topic} />
                   )}
-                  {/* Additional weeks */}
-                  {simulation.additional_weeks && simulation.additional_weeks.map((week, index) => (
-                    <SimulationWindowChip key={index} label={week} />
-                  ))}
-                  {/* Show generic message if no weeks */}
-                  {!simulation.main_week && (!simulation.additional_weeks || simulation.additional_weeks.length === 0) && (
+                  {/* Show generic message if no week */}
+                  {!simulation.week_topic && (
                     <Typography variant="body2" sx={{ color: 'text.secondary', fontStyle: 'italic', fontSize: { xs: '0.85rem', md: '1rem' } }}>
                       סימולציה זו מתאימה לכל שבוע.
                     </Typography>

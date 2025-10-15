@@ -86,55 +86,36 @@ class WeekTopic(models.Model):
 class Simulation(models.Model):
     """A simulation."""
 
+    author = models.CharField("מחבר", max_length=100, default="מחבר לא ידוע")
     url = models.URLField(verbose_name="קישור")
-    main_sim_topic = models.ForeignKey(
-        SimulationTopic,
+    week_topic = models.ForeignKey(
+        "WeekTopic",
         on_delete=models.PROTECT,
-        related_name="main_topic_simulations",
-        verbose_name="נושא מרכזי",
-    )
-    main_role_tag = models.ForeignKey(
-        RoleTag,
-        on_delete=models.PROTECT,
-        related_name="main_role_tag_simulations",
-        verbose_name="תגית תפקיד מרכזית",
-        null=True,
-        blank=True,
+        related_name="simulations",
+        verbose_name="נושא שבועי",
     )
     type = models.CharField(
         max_length=20,
         choices=SimulationType.choices,
         verbose_name="סוג",
     )
-    main_week = models.ForeignKey(
-        "WeekTopic",
-        on_delete=models.PROTECT,
-        related_name="main_week_simulations",
-        verbose_name="שבוע מרכזי",
-        null=True,
-        blank=True,
-    )
     difficulty = models.CharField(
         max_length=10,
         choices=SimulationDifficulty.choices,
         verbose_name="רמת קושי",
     )
-    additional_sim_topics = models.ManyToManyField(
-        SimulationTopic,
-        related_name="additional_topic_simulations",
-        verbose_name="נושאים נוספים",
-        blank=True,
-    )
-    additional_role_tags = models.ManyToManyField(
+    role = models.ForeignKey(
         RoleTag,
-        related_name="additional_role_tag_simulations",
-        verbose_name="תגיות תפקיד נוספות",
+        on_delete=models.PROTECT,
+        related_name="simulations",
+        verbose_name="תפקיד",
+        null=True,
         blank=True,
     )
-    additional_weeks = models.ManyToManyField(
-        "WeekTopic",
-        related_name="additional_week_simulations",
-        verbose_name="שבועות אפשריים נוספים",
+    simulation_topics = models.ManyToManyField(
+        SimulationTopic,
+        related_name="simulations",
+        verbose_name="נושאי סימולציה",
         blank=True,
     )
 
@@ -144,11 +125,9 @@ class Simulation(models.Model):
         indexes = [
             models.Index(fields=["type"]),
             models.Index(fields=["difficulty"]),
+            models.Index(fields=["author"]),
         ]
 
     def __str__(self):
-        role = self.main_role_tag if self.main_role_tag is not None else "כללי"
-        return f"{self.main_sim_topic} - {role}"
-        if self.main_role_tag is not None:
-            result += f" - {self.main_role_tag}"
-        return result
+        role = self.role if self.role is not None else "כללי"
+        return f"{self.author} - {role}"

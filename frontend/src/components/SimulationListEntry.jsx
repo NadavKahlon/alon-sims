@@ -5,7 +5,7 @@ import Paper from '@mui/material/Paper';
 import { useTheme } from '@mui/material/styles';
 import { LocalFireDepartment, MenuBook, CheckCircle, Warning, Error, Help, Person, CalendarToday } from '@mui/icons-material';
 
-function SimulationListEntry({ simulation, onClick }) {
+function SimulationListEntry({ simulation, onClick, searchCriteria }) {
   const theme = useTheme();
 
   const handleClick = useCallback(() => {
@@ -129,22 +129,28 @@ function SimulationListEntry({ simulation, onClick }) {
         </Typography>
         
         <Box sx={{ display: 'flex', gap: { xs: 0.75, md: 1.5 }, flexWrap: 'wrap' }}>
-          <Box sx={{ 
-            backgroundColor: 'grey.200', 
-            color: 'grey.700',
-            px: { xs: 0.75, md: 1.5 },
-            py: { xs: 0.25, md: 0.75 },
-            borderRadius: { xs: 0.75, md: 1.5 },
-            fontSize: { xs: '0.65rem', md: '0.85rem' },
-            display: 'flex',
-            alignItems: 'center',
-            gap: { xs: 0.25, md: 0.5 }
-          }}>
-            <Help sx={{ fontSize: { xs: 12, md: 16 } }} />
-            {simulation.main_sim_topic || 'נושא ראשי'}
-          </Box>
+          {/* Show only matching simulation topics */}
+          {simulation.simulation_topics && simulation.simulation_topics
+            .filter(topic => searchCriteria?.simTopics?.includes(topic))
+            .map((topic, index) => (
+            <Box key={index} sx={{ 
+              backgroundColor: 'grey.200', 
+              color: 'grey.700',
+              px: { xs: 0.75, md: 1.5 },
+              py: { xs: 0.25, md: 0.75 },
+              borderRadius: { xs: 0.75, md: 1.5 },
+              fontSize: { xs: '0.65rem', md: '0.85rem' },
+              display: 'flex',
+              alignItems: 'center',
+              gap: { xs: 0.25, md: 0.5 }
+            }}>
+              <Help sx={{ fontSize: { xs: 12, md: 16 } }} />
+              {topic}
+            </Box>
+          ))}
           
-          {simulation.main_role_tag && (
+          {/* Always show role */}
+          {simulation.role && (
             <Box sx={{ 
               backgroundColor: 'grey.200', 
               color: 'grey.700',
@@ -157,11 +163,12 @@ function SimulationListEntry({ simulation, onClick }) {
               gap: { xs: 0.25, md: 0.5 }
             }}>
               <Person sx={{ fontSize: { xs: 12, md: 16 } }} />
-              {simulation.main_role_tag}
+              {simulation.role}
             </Box>
           )}
 
-          {simulation.main_week && (
+          {/* Always show week */}
+          {simulation.week_topic && (
             <Box sx={{ 
               backgroundColor: 'grey.200', 
               color: 'grey.700',
@@ -174,7 +181,7 @@ function SimulationListEntry({ simulation, onClick }) {
               gap: { xs: 0.25, md: 0.5 }
             }}>
               <CalendarToday sx={{ fontSize: { xs: 12, md: 16 } }} />
-              {simulation.main_week}
+              {simulation.week_topic}
             </Box>
           )}
         </Box>

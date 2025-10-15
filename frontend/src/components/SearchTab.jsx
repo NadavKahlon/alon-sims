@@ -322,6 +322,7 @@ function SearchTab() {
                     <SimulationList 
                         simulations={displayedSims}
                         onSimulationClick={setOpenedSimulation}
+                        searchCriteria={searchObject}
                     />
                 </Box>
             </Box>
