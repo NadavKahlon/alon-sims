@@ -137,6 +137,20 @@ function SimulationWindow({ open, onClose, simulation }) {
 
           <Divider />
 
+          {/* Summary Section */}
+          {simulation.summary && (
+            <Box>
+              <Typography variant="subtitle1" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: { xs: '1rem', md: '1.4rem' }, fontWeight: 'bold' }}>
+                תקציר הסימולציה
+              </Typography>
+              <Typography variant="body1" sx={{ whiteSpace: 'pre-line', fontSize: { xs: '0.95rem', md: '1.05rem' } }}>
+                {simulation.summary}
+              </Typography>
+            </Box>
+          )}
+
+          <Divider />
+
           {/* Author Section */}
           <Box>
             <Typography variant="subtitle1" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: { xs: '1rem', md: '1.4rem' }, fontWeight: 'bold' }}>
