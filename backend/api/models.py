@@ -86,6 +86,8 @@ class WeekTopic(models.Model):
 class Simulation(models.Model):
     """A simulation."""
 
+    title = models.CharField("כותרת", max_length=200, default="")
+    summary = models.TextField("תקציר", blank=True, default="")
     author = models.CharField("מחבר", max_length=100, default="מחבר לא ידוע")
     url = models.URLField(verbose_name="קישור")
     week_topic = models.ForeignKey(
@@ -129,5 +131,7 @@ class Simulation(models.Model):
         ]
 
     def __str__(self):
+        if self.title:
+            return self.title
         role = self.role if self.role is not None else "כללי"
         return f"{self.author} - {role}"
