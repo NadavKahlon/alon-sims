@@ -21,6 +21,7 @@ def list_simulations(request):
             {
                 "id": sim.id,
                 "title": str(sim),
+                "summary": sim.summary,
                 "author": sim.author,
                 "url": sim.url,
                 "week_topic": sim.week_topic.topic,
