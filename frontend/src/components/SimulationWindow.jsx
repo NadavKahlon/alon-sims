@@ -151,17 +151,6 @@ function SimulationWindow({ open, onClose, simulation }) {
 
           <Divider />
 
-          {/* Author Section */}
-          <Box>
-            <Typography variant="subtitle1" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: { xs: '1rem', md: '1.4rem' }, fontWeight: 'bold' }}>
-              <Person sx={{ fontSize: { xs: 18, md: 26 } }} />
-              מחבר הסימולציה
-            </Typography>
-            <Typography variant="body1" sx={{ fontSize: { xs: '0.9rem', md: '1.1rem' }, fontWeight: 'medium' }}>
-              {simulation.author || 'לא מוגדר'}
-            </Typography>
-          </Box>
-
           {/* Topics Section */}
           <Box>
             <Typography variant="subtitle1" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: { xs: '1rem', md: '1.4rem' }, fontWeight: 'bold' }}>
