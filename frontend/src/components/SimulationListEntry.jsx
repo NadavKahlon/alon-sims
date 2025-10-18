@@ -126,7 +126,7 @@ function SimulationListEntry({ simulation, onClick, searchCriteria }) {
       {/* Left side - Content (RTL) */}
       <Box sx={{ flex: 1, order: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
         <Typography variant="subtitle1" component="h3" sx={{ 
-          fontSize: { xs: '1rem', md: '1.4rem' }, 
+          fontSize: { xs: '0.9rem', md: '1.4rem' }, 
           fontWeight: 600, 
           mb: { xs: 0.75, md: 1.5 } 
         }}>
