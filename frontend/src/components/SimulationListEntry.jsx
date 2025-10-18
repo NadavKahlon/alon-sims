@@ -33,6 +33,11 @@ function SimulationListEntry({ simulation, onClick, searchCriteria }) {
   const typeConfig = getTypeConfig(simulation.type);
   const difficultyConfig = getDifficultyConfig(simulation.difficulty);
 
+  // Determine which topics to show: matching ones or fallback to first topic
+  const allTopics = Array.isArray(simulation.simulation_topics) ? simulation.simulation_topics : [];
+  const matchingTopics = allTopics.filter(topic => searchCriteria?.simTopics?.includes(topic));
+  const topicsToShow = matchingTopics.length > 0 ? matchingTopics : (allTopics.length > 0 ? [allTopics[0]] : []);
+
   return (
     <Paper 
       elevation={2} 
@@ -129,10 +134,8 @@ function SimulationListEntry({ simulation, onClick, searchCriteria }) {
         </Typography>
         
         <Box sx={{ display: 'flex', gap: { xs: 0.75, md: 1.5 }, flexWrap: 'wrap' }}>
-          {/* Show only matching simulation topics */}
-          {simulation.simulation_topics && simulation.simulation_topics
-            .filter(topic => searchCriteria?.simTopics?.includes(topic))
-            .map((topic, index) => (
+          {/* Show matching simulation topics; if none, show first topic as fallback */}
+          {topicsToShow.map((topic, index) => (
             <Box key={index} sx={{ 
               backgroundColor: 'grey.200', 
               color: 'grey.700',

@@ -2,6 +2,14 @@
 
 from django.db import migrations
 
+# Colors from migration 0009
+TOPIC_TYPE_COLORS = {
+    "אנשים": "#e53935",       # red
+    "סיטואציות": "#8e24aa",   # purple
+    "פקודות": "#1e88e5",      # blue
+    "תכונות נבחנות": "#43a047", # green
+}
+
 
 ROLE_TAGS = [
     "חבצלות",
@@ -24,7 +32,6 @@ ROLE_TAGS = [
     "תכנות",
     "הנדסה",
 ]
-
 SIMULATION_TOPICS = {
     "אנשים": [
         "התנהלות עם רמה ממונה",
@@ -85,19 +92,11 @@ SIMULATION_TOPICS = {
     ],
 }
 
-WEEK_TOPICS = [
-    "שבוע הכנה",
-    "שבוע מנהיגות",
-    "שבוע טקטיקה", 
-    "שבוע פיקוד",
-    "שבוע סיכום",
-]
-
 SIMULATIONS = [
     {
         "author": "רס\"ן יוסי כהן",
         "url": "https://example.com/sim1",
-        "week_topic": "שבוע מנהיגות",
+        "week_topic": "מנהיגות",
         "type": "פורמלית",
         "difficulty": "בינונית",
         "role": "חבצלות",
@@ -106,7 +105,7 @@ SIMULATIONS = [
     {
         "author": "רס\"ן שרה לוי",
         "url": "https://example.com/sim2",
-        "week_topic": "שבוע טקטיקה",
+        "week_topic": "יסודות",
         "type": "מתפרצת",
         "difficulty": "קשה",
         "role": "אפסילון",
@@ -115,7 +114,7 @@ SIMULATIONS = [
     {
         "author": "רס\"ן דוד ישראלי",
         "url": "https://example.com/sim3",
-        "week_topic": "שבוע הכנה",
+        "week_topic": "שבוע שטח",
         "type": "פורמלית",
         "difficulty": "קלה",
         "role": "בינה",
@@ -124,7 +123,7 @@ SIMULATIONS = [
     {
         "author": "רס\"ר מיכל אברהם",
         "url": "https://example.com/sim4",
-        "week_topic": "שבוע פיקוד",
+        "week_topic": 'סד"ח',
         "type": "מתפרצת",
         "difficulty": "בינונית",
         "role": "ברקים",
@@ -133,7 +132,7 @@ SIMULATIONS = [
     {
         "author": "רס\"ן אורי גולד",
         "url": "https://example.com/sim5",
-        "week_topic": "שבוע סיכום",
+        "week_topic": "המקצוע הצבאי",
         "type": "פורמלית",
         "difficulty": "קשה",
         "role": "גבישים",
@@ -149,13 +148,6 @@ def seed_data(apps, schema_editor):
     SimulationTopic = apps.get_model("api", "SimulationTopic")
     Simulation = apps.get_model("api", "Simulation")
 
-    # Seed WeekTopic
-    for i, topic in enumerate(WEEK_TOPICS, 1):
-        WeekTopic.objects.get_or_create(
-            topic=topic,
-            defaults={"serial_num": i}
-        )
-
     # Seed RoleTag
     for name in ROLE_TAGS:
         RoleTag.objects.get_or_create(name=name)
@@ -164,7 +156,7 @@ def seed_data(apps, schema_editor):
     for topic_type_name in SIMULATION_TOPICS:
         topic_type, _ = SimulationTopicType.objects.get_or_create(
             name=topic_type_name,
-            defaults={"color": "#9e9e9e", "serial_num": 0}
+            defaults={"color": TOPIC_TYPE_COLORS.get(topic_type_name, "#9e9e9e"), "serial_num": 0}
         )
         for topic in SIMULATION_TOPICS[topic_type_name]:
             SimulationTopic.objects.get_or_create(
@@ -214,10 +206,6 @@ def unseed_data(apps, schema_editor):
     # Delete role tags
     if ROLE_TAGS:
         RoleTag.objects.filter(name__in=ROLE_TAGS).delete()
-    
-    # Delete week topics
-    if WEEK_TOPICS:
-        WeekTopic.objects.filter(topic__in=WEEK_TOPICS).delete()
 
 
 class Migration(migrations.Migration):
