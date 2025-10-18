@@ -36,7 +36,7 @@ function SimulationListEntry({ simulation, onClick, searchCriteria }) {
   // Determine which topics to show: matching ones or fallback to first topic
   const allTopics = Array.isArray(simulation.simulation_topics) ? simulation.simulation_topics : [];
   const matchingTopics = allTopics.filter(topic => searchCriteria?.simTopics?.includes(topic));
-  const topicsToShow = matchingTopics.length > 0 ? matchingTopics : (allTopics.length > 0 ? [allTopics[0]] : []);
+  const topicsToShow = matchingTopics.length > 0 ? matchingTopics : (allTopics.length > 0 ? [allTopics[allTopics.length - 1]] : []);
 
   return (
     <Paper 
@@ -151,26 +151,6 @@ function SimulationListEntry({ simulation, onClick, searchCriteria }) {
               {topic}
             </Box>
           ))}
-          
-          {/* Show last simulation topic if no matching topics found */}
-          {simulation.simulation_topics && 
-           simulation.simulation_topics.length > 0 && 
-           simulation.simulation_topics.filter(topic => searchCriteria?.simTopics?.includes(topic)).length === 0 && (
-            <Box sx={{ 
-              backgroundColor: 'grey.200', 
-              color: 'grey.700',
-              px: { xs: 0.75, md: 1.5 },
-              py: { xs: 0.25, md: 0.75 },
-              borderRadius: { xs: 0.75, md: 1.5 },
-              fontSize: { xs: '0.65rem', md: '0.85rem' },
-              display: 'flex',
-              alignItems: 'center',
-              gap: { xs: 0.25, md: 0.5 }
-            }}>
-              <Help sx={{ fontSize: { xs: 12, md: 16 } }} />
-              {simulation.simulation_topics[simulation.simulation_topics.length - 1]}
-            </Box>
-          )}
           
           {/* Always show role */}
           {simulation.role && (
