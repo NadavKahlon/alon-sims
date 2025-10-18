@@ -155,7 +155,8 @@ function SearchTab() {
     return (
         <>
             <Box sx={{ 
-                p: 3, 
+                px: { xs: 0, md: 3 }, 
+                py: 3,
                 display: 'flex', 
                 justifyContent: 'center',
                 width: '100%'
