@@ -5,8 +5,8 @@ import pandas as pd
 import os
 
 
-def load_simulations_from_excel(apps, schema_editor):
-    """Load simulations from the Excel file and replace all existing simulations."""
+def load_cleaned_simulations(apps, schema_editor):
+    """Load simulations from the cleaned Excel file and replace all existing simulations."""
     
     # Get models
     Simulation = apps.get_model("api", "Simulation")
@@ -17,15 +17,13 @@ def load_simulations_from_excel(apps, schema_editor):
     # Clear all existing simulations
     Simulation.objects.all().delete()
     
-    # Read Excel file
+    # Read cleaned Excel file
     excel_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), '..', 'knowledge-base.xlsx')
-    if not os.path.exists(excel_path):
-        excel_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), '..', 'knowledge-base.xlsx')
-    
     try:
         df = pd.read_excel(excel_path)
+        print(f"Loading {len(df)} simulations from cleaned Excel file")
     except Exception as e:
-        print(f"Error reading Excel file: {e}")
+        print(f"Error reading cleaned Excel file: {e}")
         return
     
     # Process each row
@@ -33,68 +31,34 @@ def load_simulations_from_excel(apps, schema_editor):
         # Skip empty rows
         if row.isnull().all():
             continue
-            
-        # Extract data from Excel row
-        author = str(row[' מחבר']) if pd.notna(row[' מחבר']) else "מחבר לא ידוע"
-        week_num = str(row['שבוע']) if pd.notna(row['שבוע']) else "1"
-        sim_type_raw = str(row[' סוג']) if pd.notna(row[' סוג']) else "פורמלית"
         
-        # Clean simulation type (handle space in " מתפרצת")
-        sim_type = sim_type_raw.strip()
-        
-        # Translate difficulty from Excel format to database format
-        difficulty_raw = str(row['רמת קושי']) if pd.notna(row['רמת קושי']) else "בינונית"
-        difficulty_mapping = {
-            "קל": "קלה",
-            "בינוני": "בינונית", 
-            "קשה": "קשה"
-        }
-        difficulty = difficulty_mapping.get(difficulty_raw, difficulty_raw)
-        
-        role_name = str(row['מסלול / תפקיד מיועד']) if pd.notna(row['מסלול / תפקיד מיועד']) else None
-        topics_str = str(row['נקודות לדקירה (בחרו כמה, עובד במחשב)']) if pd.notna(row['נקודות לדקירה (בחרו כמה, עובד במחשב)']) else ""
-        url = str(row['קישור (וודאו שהמסמך נגיש לכל מי שיש לו את הקישור!)']) if pd.notna(row['קישור (וודאו שהמסמך נגיש לכל מי שיש לו את הקישור!)']) else "https://example.com/placeholder"
-        title = str(row['כותרת הסימולציה (משפט שמתאר בקצרה את האירוע, ישמש כדי להציג את הסימולציה בתוצאה של החיפוש) ממליץ להשתמש בAI כדי לייצר את הכותרת כתימצות של הא"ת / סיכום הסימולציה (העמודה הבאה)']) if pd.notna(row['כותרת הסימולציה (משפט שמתאר בקצרה את האירוע, ישמש כדי להציג את הסימולציה בתוצאה של החיפוש) ממליץ להשתמש בAI כדי לייצר את הכותרת כתימצות של הא"ת / סיכום הסימולציה (העמודה הבאה)']) else ""
-        summary = str(row['סיכום הסימולציה (זה ההסבר היחיד המעמיק שיופיע בשימור ידע בפועל - תכתבו פסקה יחסית מפורטת!) ממליץ להעתיק מסעיף "מהלך הסימולציה" בא"ת']) if pd.notna(row['סיכום הסימולציה (זה ההסבר היחיד המעמיק שיופיע בשימור ידע בפועל - תכתבו פסקה יחסית מפורטת!) ממליץ להעתיק מסעיף "מהלך הסימולציה" בא"ת']) else ""
+        # Extract data from cleaned Excel row
+        title = str(row['title']) if pd.notna(row['title']) else ""
+        summary = str(row['summary']) if pd.notna(row['summary']) else ""
+        week_topic_name = str(row['week_topic']) if pd.notna(row['week_topic']) else "יסודות"
+        sim_type = str(row['type']) if pd.notna(row['type']) else "פורמלית"
+        difficulty = str(row['difficulty']) if pd.notna(row['difficulty']) else "בינונית"
+        role = str(row['role']) if pd.notna(row['role']) else ""
+        topics_str = str(row['simulation_topics']) if pd.notna(row['simulation_topics']) else ""
         
         # Skip if essential data is missing
         if not title and not summary:
             continue
-            
-        # Map week numbers to proper week names
-        week_mapping = {
-            "1": "יסודות",
-            "2": "מנהיגות", 
-            "3": "שבוע שטח",
-            "4": "סד״ח",
-            "5": "המקצוע הצבאי",
-            "6": "המקצוע הצבאי",
-            "7": "פיקוד וטיפול בפרט",
-            "8": "זהות",
-            "9": "סיכום"
-        }
         
-        # Handle date format in week column (e.g., "2025-06-05 00:00:00" -> "המקצוע הצבאי")
-        if "2025-06-05" in str(week_num):
-            week_topic_name = "המקצוע הצבאי"
-        else:
-            week_topic_name = week_mapping.get(week_num, f"שבוע {week_num}")
+        # Get or create week topic
         week_topic, _ = WeekTopic.objects.get_or_create(
             topic=week_topic_name,
-            defaults={"serial_num": int(week_num) if week_num.isdigit() else 1}
+            defaults={"serial_num": 1}
         )
         
         # Get or create role tag
-        role = None
-        if role_name and role_name.strip():
-            role, _ = RoleTag.objects.get_or_create(name=role_name.strip())
+        if role and role.strip():
+            role, _ = RoleTag.objects.get_or_create(name=role.strip())
         
         # Create simulation
         simulation = Simulation.objects.create(
             title=title,
             summary=summary,
-            author=author,
-            url=url,
             week_topic=week_topic,
             type=sim_type,
             difficulty=difficulty,
@@ -106,18 +70,14 @@ def load_simulations_from_excel(apps, schema_editor):
             # Split topics by comma and clean them
             topic_names = [topic.strip() for topic in topics_str.split(',') if topic.strip()]
             for topic_name in topic_names:
-                # Fix quote issues: "ב""מ" -> ב"מ, "התמודדות עם בלת""מים" -> התמודדות עם בלת"מים
-                cleaned_topic_name = topic_name
-                if topic_name.startswith('"') and topic_name.endswith('"'):
-                    # Remove outer quotes and fix inner quotes
-                    cleaned_topic_name = topic_name[1:-1].replace('""', '"')
-                
                 # Try to find existing topic or create new one
                 topic, _ = SimulationTopic.objects.get_or_create(
-                    name=cleaned_topic_name,
+                    name=topic_name,
                     defaults={"type": None}
                 )
                 simulation.simulation_topics.add(topic)
+    
+    print(f"Successfully loaded {Simulation.objects.count()} simulations")
 
 
 def clear_all_simulations(apps, schema_editor):
@@ -133,5 +93,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(load_simulations_from_excel, reverse_code=clear_all_simulations),
+        migrations.RunPython(load_cleaned_simulations, reverse_code=clear_all_simulations),
     ]
